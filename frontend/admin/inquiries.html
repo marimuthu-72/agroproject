@@ -8,6 +8,38 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/admin.css">
+  <style>
+    .message-card {
+      transition: all 0.2s ease-in-out;
+      border-left: 4px solid #10b981;
+    }
+    .message-card.status-new {
+      border-left-color: #f59e0b;
+      background-color: #fffbeb;
+    }
+    .message-card.status-in-progress {
+      border-left-color: #3b82f6;
+      background-color: #eff6ff;
+    }
+    .message-card.status-resolved {
+      border-left-color: #10b981;
+      background-color: #f0fdf4;
+    }
+    .live-pulse {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+      animation: pulse-green 1.8s infinite;
+    }
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+  </style>
 </head>
 <body class="admin-body">
 
@@ -26,7 +58,7 @@
         <a href="products.html" class="admin-nav-item"><i class="fa-solid fa-boxes-stacked fs-5"></i> <span>Product Management</span></a>
         <a href="inventory.html" class="admin-nav-item"><i class="fa-solid fa-warehouse fs-5"></i> <span>Stock Inventory</span></a>
         <a href="orders.html" class="admin-nav-item"><i class="fa-solid fa-truck-ramp-box fs-5"></i> <span>Live Orders</span></a>
-        <a href="inquiries.html" class="admin-nav-item active"><i class="fa-solid fa-comments fs-5"></i> <span>Farmer Messages</span></a>
+        <a href="inquiries.html" class="admin-nav-item active"><i class="fa-solid fa-comments fs-5"></i> <span>User Messages</span> <span id="sidebar-inq-badge" class="badge bg-danger ms-auto rounded-pill" style="display:none;">0</span></a>
         <a href="customers.html" class="admin-nav-item"><i class="fa-solid fa-users fs-5"></i> <span>Farmer Directory</span></a>
         <a href="offers.html" class="admin-nav-item"><i class="fa-solid fa-tags fs-5"></i> <span>Coupons & Offers</span></a>
         <a href="transactions.html" class="admin-nav-item"><i class="fa-solid fa-receipt fs-5"></i> <span>Revenue & Payments</span></a>
@@ -41,9 +73,16 @@
 
     <div class="admin-main">
       <div class="admin-header">
-        <h1 class="admin-page-title"><i class="fa-solid fa-comments text-success me-2"></i>Farmer Messages & Inquiry Support Desk</h1>
         <div>
-          <button class="btn btn-sm btn-success font-heading fw-bold" onclick="renderAdminInquiries()"><i class="fa-solid fa-rotate me-1"></i> Refresh Messages</button>
+          <h1 class="admin-page-title"><i class="fa-solid fa-comments text-success me-2"></i>Farmer Messages & Support Desk</h1>
+          <div class="small text-muted d-flex align-items-center gap-2 mt-1">
+            <span class="live-pulse"></span>
+            <span>Real-time polling active (auto-sync every 5s)</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-success font-heading fw-bold" onclick="simulateUserMessage()"><i class="fa-solid fa-plus me-1"></i> Simulate Test User Message</button>
+          <button class="btn btn-sm btn-success font-heading fw-bold" onclick="renderAdminInquiries()"><i class="fa-solid fa-rotate me-1"></i> Refresh</button>
         </div>
       </div>
 
@@ -51,53 +90,74 @@
         <!-- Stats Row -->
         <div class="row g-3 mb-4">
           <div class="col-md-4">
-            <div class="card p-3 border shadow-sm">
-              <div class="text-muted small fw-bold">TOTAL MESSAGES</div>
-              <div id="stat-total-inquiries" class="fs-2 font-heading fw-bold text-success">0</div>
+            <div class="card p-3 border shadow-sm rounded-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-muted small fw-bold">TOTAL USER MESSAGES</div>
+                  <div id="stat-total-inquiries" class="fs-2 font-heading fw-bold text-emerald-800">0</div>
+                </div>
+                <div class="fs-1 text-emerald-600 opacity-50"><i class="fa-solid fa-envelope-open-text"></i></div>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="card p-3 border shadow-sm">
-              <div class="text-muted small fw-bold">NEW INQUIRIES</div>
-              <div id="stat-new-inquiries" class="fs-2 font-heading fw-bold text-warning">0</div>
+            <div class="card p-3 border shadow-sm rounded-3 bg-warning-subtle">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-dark small fw-bold">UNREAD / NEW MESSAGES</div>
+                  <div id="stat-new-inquiries" class="fs-2 font-heading fw-bold text-warning-emphasis">0</div>
+                </div>
+                <div class="fs-1 text-warning opacity-75"><i class="fa-solid fa-bell font-pulse"></i></div>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="card p-3 border shadow-sm">
-              <div class="text-muted small fw-bold">RESOLVED MESSAGES</div>
-              <div id="stat-resolved-inquiries" class="fs-2 font-heading fw-bold text-emerald-800">0</div>
+            <div class="card p-3 border shadow-sm rounded-3 bg-success-subtle">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="text-dark small fw-bold">RESOLVED INQUIRIES</div>
+                  <div id="stat-resolved-inquiries" class="fs-2 font-heading fw-bold text-success">0</div>
+                </div>
+                <div class="fs-1 text-success opacity-75"><i class="fa-solid fa-circle-check"></i></div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Filter Bar -->
-        <div class="card p-3 mb-4 bg-white border">
-          <div class="row g-3">
+        <div class="card p-3 mb-4 bg-white border rounded-3 shadow-sm">
+          <div class="row g-3 align-items-center">
             <div class="col-md-6">
-              <input type="text" id="inquiry-search-input" class="form-control" placeholder="Search Farmer Name, Phone, or Message content..." oninput="filterInquiries()">
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" id="inquiry-search-input" class="form-control border-start-0" placeholder="Search by Farmer Name, Phone Number, or Message text..." oninput="filterInquiries()">
+              </div>
             </div>
-            <div class="col-md-6">
-              <select id="inquiry-status-filter" class="form-select" onchange="filterInquiries()">
-                <option value="ALL">All Inquiry Statuses</option>
-                <option value="New">New</option>
+            <div class="col-md-4">
+              <select id="inquiry-status-filter" class="form-select fw-semibold" onchange="filterInquiries()">
+                <option value="ALL">All Message Statuses</option>
+                <option value="New">New / Unread Only</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Resolved">Resolved</option>
               </select>
+            </div>
+            <div class="col-md-2 text-end">
+              <button class="btn btn-outline-danger btn-sm w-100 fw-bold" onclick="clearResolvedInquiries()"><i class="fa-solid fa-trash me-1"></i> Clear Resolved</button>
             </div>
           </div>
         </div>
 
         <!-- Inquiries Table -->
-        <div class="admin-table-container">
-          <table class="admin-table">
+        <div class="admin-table-container shadow-sm">
+          <table class="admin-table align-middle">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Farmer Name & Contact</th>
-                <th>Subject / Query Type</th>
-                <th>Message Content</th>
+                <th>Date & Time</th>
+                <th>Farmer Name & Mobile</th>
+                <th>Query Category</th>
+                <th style="min-width: 280px;">Message Content</th>
                 <th>Status</th>
-                <th>Action / Update</th>
+                <th>Admin Actions & Reply</th>
               </tr>
             </thead>
             <tbody id="admin-inquiries-table">
@@ -110,16 +170,50 @@
     </div>
   </div>
 
+  <!-- WhatsApp Reply Modal -->
+  <div class="modal fade" id="replyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title font-heading fw-bold"><i class="fa-brands fa-whatsapp me-2"></i>Send Reply via WhatsApp</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small">Farmer Name</label>
+            <input type="text" id="reply-farmer-name" class="form-control" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small">Mobile Phone</label>
+            <input type="text" id="reply-farmer-phone" class="form-control" readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-muted small">User Message</label>
+            <div id="reply-farmer-msg" class="p-2 bg-light rounded border text-muted small"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold text-success small">Your Response Message *</label>
+            <textarea id="reply-text" class="form-control" rows="4" placeholder="Type your answer or dosage recommendation for the farmer..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success fw-bold" onclick="sendWhatsAppReply()"><i class="fa-brands fa-whatsapp me-1"></i> Open WhatsApp & Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../js/app.js"></script>
   <script src="../js/admin.js"></script>
   <script>
     let allInquiries = [];
+    let currentReplyId = null;
 
     async function renderAdminInquiries() {
       const tableBody = document.getElementById('admin-inquiries-table');
       if (!tableBody) return;
-
-      tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted"><i class="fa-solid fa-spinner fa-spin me-2"></i> Loading customer messages...</td></tr>`;
 
       try {
         const res = await fetch('/api/inquiries');
@@ -136,19 +230,36 @@
 
       if (allInquiries.length === 0) {
         allInquiries = [
-          { id: 1, name: 'Muthukumar S.', phone: '9842111223', email: 'muthu@farm.in', subject: 'Soil Testing Appointment', message: 'Need soil sample testing for Paddy field in Cheranmahadevi.', status: 'New', date: 'Today' },
-          { id: 2, name: 'Karthik Raja', phone: '9443122334', email: 'karthik@agri.com', subject: 'Bulk Order Inquiry', message: 'Required 50 bags of NPK 19-19-19 for upcoming season.', status: 'Resolved', date: 'Yesterday' }
+          { id: 'INQ-101', name: 'Muthukumar S.', phone: '9842111223', email: 'muthu@farm.in', subject: 'Soil Testing Appointment', message: 'Need soil sample testing for Paddy field in Cheranmahadevi.', status: 'New', createdAt: new Date().toISOString() },
+          { id: 'INQ-102', name: 'Karthik Raja', phone: '9443122334', email: 'karthik@agri.com', subject: 'Bulk Order Inquiry', message: 'Required 50 bags of NPK 19-19-19 for upcoming season.', status: 'Resolved', createdAt: new Date(Date.now() - 86400000).toISOString() }
         ];
+        try {
+          localStorage.setItem('agri_inquiries', JSON.stringify(allInquiries));
+        } catch(e) {}
       }
 
       updateInquiryStats(allInquiries);
-      renderInquiriesTableRows(allInquiries);
+      filterInquiries();
     }
 
     function updateInquiryStats(items) {
-      document.getElementById('stat-total-inquiries').textContent = items.length;
-      document.getElementById('stat-new-inquiries').textContent = items.filter(i => (i.status || 'New') === 'New').length;
-      document.getElementById('stat-resolved-inquiries').textContent = items.filter(i => i.status === 'Resolved').length;
+      const total = items.length;
+      const unreadCount = items.filter(i => (i.status || 'New') === 'New').length;
+      const resolvedCount = items.filter(i => i.status === 'Resolved').length;
+
+      document.getElementById('stat-total-inquiries').textContent = total;
+      document.getElementById('stat-new-inquiries').textContent = unreadCount;
+      document.getElementById('stat-resolved-inquiries').textContent = resolvedCount;
+
+      const sidebarBadge = document.getElementById('sidebar-inq-badge');
+      if (sidebarBadge) {
+        if (unreadCount > 0) {
+          sidebarBadge.textContent = unreadCount;
+          sidebarBadge.style.display = 'inline-block';
+        } else {
+          sidebarBadge.style.display = 'none';
+        }
+      }
     }
 
     function renderInquiriesTableRows(items) {
@@ -156,37 +267,53 @@
       if (!tableBody) return;
 
       if (items.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No customer inquiry messages found.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted"><i class="fa-solid fa-inbox fs-2 mb-2 d-block"></i> No customer messages found. Click "Simulate Test User Message" to create sample messages.</td></tr>`;
         return;
       }
 
       tableBody.innerHTML = items.map(i => {
         const dateStr = i.createdAt ? new Date(i.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : (i.date || 'Today');
+        const isNew = (i.status || 'New') === 'New';
         const badgeClass = i.status === 'Resolved' ? 'bg-success' : (i.status === 'In Progress' ? 'bg-info text-dark' : 'bg-warning text-dark');
+        const cleanPhone = (i.phone || '').replace(/[^0-9]/g, '');
 
         return `
-          <tr>
-            <td><small class="text-muted fw-bold">${dateStr}</small></td>
+          <tr class="${isNew ? 'table-warning-subtle' : ''}">
             <td>
-              <div class="fw-bold text-emerald-800">${i.name}</div>
-              <small class="text-muted"><i class="fa-solid fa-phone me-1"></i><a href="tel:${i.phone}" class="text-decoration-none text-muted">${i.phone}</a></small>
+              <small class="fw-bold text-dark"><i class="fa-regular fa-clock me-1 text-muted"></i>${dateStr}</small>
+            </td>
+            <td>
+              <div class="fw-bold text-emerald-800 fs-6">${i.name}</div>
+              <small class="text-muted"><i class="fa-solid fa-phone text-success me-1"></i><a href="tel:${cleanPhone}" class="text-decoration-none text-dark fw-semibold">${i.phone}</a></small>
               ${i.email ? `<br><small class="text-muted"><i class="fa-solid fa-envelope me-1"></i>${i.email}</small>` : ''}
             </td>
             <td>
-              <span class="badge bg-light text-dark border fw-bold">${i.subject || 'General Inquiry'}</span>
-            </td>
-            <td style="max-width: 320px;">
-              <div class="p-2 rounded bg-light border text-slate-700 small" style="white-space: pre-wrap;">${i.message}</div>
+              <span class="badge bg-light text-emerald-800 border border-success fw-bold px-2 py-1">${i.subject || 'General Support'}</span>
             </td>
             <td>
-              <span class="badge ${badgeClass} px-3 py-1 rounded-pill">${i.status || 'New'}</span>
+              <div class="p-2 rounded bg-light border text-slate-800 small" style="white-space: pre-wrap; max-width: 380px;">${i.message}</div>
             </td>
             <td>
-              <select class="form-select form-select-sm fw-bold border-success" onchange="updateInquiryStatus('${i.id}', this.value)">
-                <option value="New" ${i.status==='New'?'selected':''}>New</option>
-                <option value="In Progress" ${i.status==='In Progress'?'selected':''}>In Progress</option>
-                <option value="Resolved" ${i.status==='Resolved'?'selected':''}>Resolved</option>
-              </select>
+              <span class="badge ${badgeClass} px-3 py-2 rounded-pill fs-7">${i.status || 'New'}</span>
+            </td>
+            <td>
+              <div class="d-flex flex-wrap align-items-center gap-1">
+                <select class="form-select form-select-sm fw-bold border-success" style="width:120px;" onchange="updateInquiryStatus('${i.id}', this.value)">
+                  <option value="New" ${i.status==='New'?'selected':''}>New</option>
+                  <option value="In Progress" ${i.status==='In Progress'?'selected':''}>In Progress</option>
+                  <option value="Resolved" ${i.status==='Resolved'?'selected':''}>Resolved</option>
+                </select>
+
+                <button class="btn btn-sm btn-success fw-bold" onclick="openWhatsAppModal('${i.id}')" title="Reply via WhatsApp">
+                  <i class="fa-brands fa-whatsapp me-1"></i> Reply
+                </button>
+                <a href="tel:${cleanPhone}" class="btn btn-sm btn-outline-primary" title="Call Customer">
+                  <i class="fa-solid fa-phone"></i>
+                </a>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry('${i.id}')" title="Delete Message">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         `;
@@ -214,7 +341,67 @@
         agriApp.showToast(`Inquiry status updated to ${newStatus}`, 'success');
       }
       updateInquiryStats(allInquiries);
-      renderInquiriesTableRows(allInquiries);
+      filterInquiries();
+    }
+
+    async function deleteInquiry(inquiryId) {
+      if (!confirm('Are you sure you want to delete this customer message?')) return;
+
+      allInquiries = allInquiries.filter(i => i.id != inquiryId);
+      try {
+        localStorage.setItem('agri_inquiries', JSON.stringify(allInquiries));
+      } catch(e) {}
+
+      if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+        agriApp.showToast('Customer message deleted.', 'info');
+      }
+      updateInquiryStats(allInquiries);
+      filterInquiries();
+    }
+
+    function clearResolvedInquiries() {
+      if (!confirm('Clear all resolved customer messages?')) return;
+      allInquiries = allInquiries.filter(i => i.status !== 'Resolved');
+      try {
+        localStorage.setItem('agri_inquiries', JSON.stringify(allInquiries));
+      } catch(e) {}
+      updateInquiryStats(allInquiries);
+      filterInquiries();
+    }
+
+    function openWhatsAppModal(inquiryId) {
+      const item = allInquiries.find(i => i.id == inquiryId);
+      if (!item) return;
+
+      currentReplyId = inquiryId;
+      document.getElementById('reply-farmer-name').value = item.name;
+      document.getElementById('reply-farmer-phone').value = item.phone;
+      document.getElementById('reply-farmer-msg').textContent = item.message;
+      document.getElementById('reply-text').value = `Hello ${item.name}, thank you for contacting G. Saravana Agro Clinic regarding "${item.subject || 'your query'}". `;
+
+      const modal = new bootstrap.Modal(document.getElementById('replyModal'));
+      modal.show();
+    }
+
+    function sendWhatsAppReply() {
+      const phone = document.getElementById('reply-farmer-phone').value.replace(/[^0-9]/g, '');
+      const replyMsg = document.getElementById('reply-text').value.trim();
+
+      if (!phone || !replyMsg) return;
+
+      const formattedPhone = phone.length === 10 ? '91' + phone : phone;
+      const encodedMsg = encodeURIComponent(replyMsg);
+      const waUrl = `https://wa.me/${formattedPhone}?text=${encodedMsg}`;
+
+      window.open(waUrl, '_blank');
+
+      if (currentReplyId) {
+        updateInquiryStatus(currentReplyId, 'In Progress');
+      }
+
+      const modalEl = document.getElementById('replyModal');
+      const instance = bootstrap.Modal.getInstance(modalEl);
+      if (instance) instance.hide();
     }
 
     function filterInquiries() {
@@ -236,9 +423,48 @@
       renderInquiriesTableRows(filtered);
     }
 
+    function simulateUserMessage() {
+      const sampleNames = ['Senthil Nathan', 'Sundaram P.', 'Mariammal R.', 'Ganesan Farmer'];
+      const sampleQueries = [
+        { subject: 'Fertilizer Dosing', msg: 'How much NPK 19-19-19 should I apply for 2 acres of Paddy crop?' },
+        { subject: 'Bulk Order Query', msg: 'Do you have 20 bags of Organic Vermicompost in stock for pickup today?' },
+        { subject: 'Soil Testing', msg: 'What is the fee for soil sample testing and how many days does report take?' }
+      ];
+
+      const randName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+      const randQ = sampleQueries[Math.floor(Math.random() * sampleQueries.length)];
+      const randPhone = '98' + Math.floor(10000000 + Math.random() * 90000000);
+
+      const newMsg = {
+        id: 'INQ-' + Math.floor(10000 + Math.random() * 90000),
+        name: randName,
+        phone: randPhone,
+        email: randName.toLowerCase().replace(' ', '') + '@farm.in',
+        subject: randQ.subject,
+        message: randQ.msg,
+        status: 'New',
+        createdAt: new Date().toISOString()
+      };
+
+      allInquiries.unshift(newMsg);
+      try {
+        localStorage.setItem('agri_inquiries', JSON.stringify(allInquiries));
+      } catch(e) {}
+
+      if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+        agriApp.showToast(`New Customer Message received from ${randName}!`, 'warning');
+      }
+
+      updateInquiryStats(allInquiries);
+      filterInquiries();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       renderAdminInquiries();
+      // Auto-polling every 5 seconds for live message sync
+      setInterval(renderAdminInquiries, 5000);
     });
   </script>
 </body>
 </html>
+

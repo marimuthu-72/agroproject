@@ -35,7 +35,7 @@ const mapRowToOrder = async (o) => {
     paymentMethod: o.payment_method || o.paymentMethod,
     paymentStatus: o.payment_status || o.paymentStatus,
     orderStatus: o.order_status || o.orderStatus,
-    totalAmount: Number(o.total_amount !== undefined ? o.total_amount : (o.totalAmount || 0)),
+    totalAmount: Number(o.total_amount !== undefined ? o.total_amount : (o.totalAmount !== undefined ? o.totalAmount : (o.total || 0))),
     discountAmount: Number(o.discount_amount !== undefined ? o.discount_amount : (o.discountAmount || 0)),
     shippingFee: Number(o.shipping_fee !== undefined ? o.shipping_fee : (o.shippingFee || 0)),
     razorpayOrderId: o.razorpay_order_id || o.razorpayOrderId || '',

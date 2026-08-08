@@ -213,9 +213,10 @@
       }
     }
 
-    function handleUserLogin(e) {
+    async function handleUserLogin(e) {
       e.preventDefault();
       const emailInput = document.getElementById('login-email').value.trim();
+      const passInput = document.getElementById('login-password') ? document.getElementById('login-password').value : '123456';
       
       let nameStr = 'Farmer';
       if (emailInput.includes('@')) {
@@ -230,12 +231,31 @@
         email: emailInput.includes('@') ? emailInput : `${emailInput}@agro.com`,
         phone: emailInput.includes('@') ? '' : emailInput,
         district: 'Cheranmahadevi',
+        location: 'Cheranmahadevi, TN',
         role: 'farmer'
       };
 
       localStorage.setItem('agri_user', JSON.stringify(userObj));
       localStorage.setItem('agri_token', 'jwt_mock_token_' + Date.now());
-      agriApp.user = userObj;
+      if (typeof agriApp !== 'undefined') agriApp.user = userObj;
+
+      // Sync customer to local customer directory
+      try {
+        let customers = JSON.parse(localStorage.getItem('agri_customers') || '[]');
+        if (!customers.some(c => c.email === userObj.email || (c.phone && c.phone === userObj.phone))) {
+          customers.unshift(userObj);
+          localStorage.setItem('agri_customers', JSON.stringify(customers));
+        }
+      } catch(err) {}
+
+      // Sync with backend API
+      try {
+        await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: nameStr, email: userObj.email, phone: userObj.phone, password: passInput, city: 'Cheranmahadevi' })
+        });
+      } catch(apiErr) {}
 
       agriApp.showToast(`Welcome back, ${nameStr}!`, 'success');
       setTimeout(() => {

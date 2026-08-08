@@ -170,19 +170,40 @@
       }
     }
 
-    function handleRegister(e) {
+    async function handleRegister(e) {
       e.preventDefault();
-      const name = document.getElementById('reg-name').value;
-      const email = document.getElementById('reg-email').value;
-      const phone = document.getElementById('reg-phone').value;
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
       const district = document.getElementById('reg-district').value;
+      const password = document.getElementById('reg-password').value;
 
-      const user = { name, email, phone, district, role: 'farmer' };
+      const user = { name, email, phone, district, location: district + ', TN', role: 'farmer' };
       localStorage.setItem('agri_user', JSON.stringify(user));
       localStorage.setItem('agri_token', 'jwt_mock_token_' + Date.now());
-      agriApp.user = user;
+      if (typeof agriApp !== 'undefined') agriApp.user = user;
 
-      agriApp.showToast('Registration Successful! Welcome to Saravana Agro Store.', 'success');
+      // Save customer to local customer directory
+      try {
+        let customers = JSON.parse(localStorage.getItem('agri_customers') || '[]');
+        if (!customers.some(c => c.email === email || (phone && c.phone === phone))) {
+          customers.unshift(user);
+          localStorage.setItem('agri_customers', JSON.stringify(customers));
+        }
+      } catch(err) {}
+
+      // Register with backend API /api/auth/register
+      try {
+        await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, password, city: district, state: 'Tamil Nadu' })
+        });
+      } catch (apiErr) {}
+
+      if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+        agriApp.showToast('Registration Successful! Welcome to Saravana Agro Store.', 'success');
+      }
       setTimeout(() => {
         window.location.href = 'profile.html';
       }, 800);
