@@ -52,15 +52,19 @@ function getLocalNetworkIP() {
   return '127.0.0.1';
 }
 
-const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || '0.0.0.0';
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  const HOST = process.env.HOST || '0.0.0.0';
 
-app.listen(PORT, HOST, () => {
-  const localIP = getLocalNetworkIP();
-  console.log('\n================================================================');
-  console.log('  🌱 G. Saravana Agro Clinic E-Commerce & Admin ERP Server');
-  console.log('================================================================');
-  console.log(`  ► Local Laptop URL:      http://localhost:${PORT}`);
-  console.log(`  ► Mobile / Wi-Fi Network: http://${localIP}:${PORT}`);
-  console.log('================================================================\n');
-});
+  app.listen(PORT, HOST, () => {
+    const localIP = getLocalNetworkIP();
+    console.log('\n================================================================');
+    console.log('  🌱 G. Saravana Agro Clinic E-Commerce & Admin ERP Server');
+    console.log('================================================================');
+    console.log(`  ► Local Laptop URL:      http://localhost:${PORT}`);
+    console.log(`  ► Mobile / Wi-Fi Network: http://${localIP}:${PORT}`);
+    console.log('================================================================\n');
+  });
+}
+
+module.exports = app;
