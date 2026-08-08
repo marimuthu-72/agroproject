@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Messages & Support Desk | ERP Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-brand-icon"><img src="../logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="fw-bold font-heading">Saravana ERP</div>
+          <div class="small text-slate-400" style="font-size:0.7rem;">Cheranmahadevi</div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item"><i class="fa-solid fa-chart-pie fs-5"></i> <span>Dashboard</span></a>
+        <a href="products.html" class="admin-nav-item"><i class="fa-solid fa-boxes-stacked fs-5"></i> <span>Product Management</span></a>
+        <a href="inventory.html" class="admin-nav-item"><i class="fa-solid fa-warehouse fs-5"></i> <span>Stock Inventory</span></a>
+        <a href="orders.html" class="admin-nav-item"><i class="fa-solid fa-truck-ramp-box fs-5"></i> <span>Live Orders</span></a>
+        <a href="inquiries.html" class="admin-nav-item active"><i class="fa-solid fa-comments fs-5"></i> <span>Farmer Messages</span></a>
+        <a href="customers.html" class="admin-nav-item"><i class="fa-solid fa-users fs-5"></i> <span>Farmer Directory</span></a>
+        <a href="offers.html" class="admin-nav-item"><i class="fa-solid fa-tags fs-5"></i> <span>Coupons & Offers</span></a>
+        <a href="transactions.html" class="admin-nav-item"><i class="fa-solid fa-receipt fs-5"></i> <span>Revenue & Payments</span></a>
+        <a href="settings.html" class="admin-nav-item"><i class="fa-solid fa-user-lock fs-5"></i> <span>Account Security</span></a>
+        
+        <div class="mt-auto pt-3 border-top border-secondary">
+          <a href="../index.html" class="admin-nav-item"><i class="fa-solid fa-store fs-5"></i> <span>View Main E-Store</span></a>
+          <button onclick="adminLogout()" class="admin-nav-item border-0 bg-transparent text-danger w-100 text-start"><i class="fa-solid fa-right-from-bracket fs-5"></i> <span>Log Out</span></button>
+        </div>
+      </nav>
+    </div>
+
+    <div class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-page-title"><i class="fa-solid fa-comments text-success me-2"></i>Farmer Messages & Inquiry Support Desk</h1>
+        <div>
+          <button class="btn btn-sm btn-success font-heading fw-bold" onclick="renderAdminInquiries()"><i class="fa-solid fa-rotate me-1"></i> Refresh Messages</button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="card p-3 border shadow-sm">
+              <div class="text-muted small fw-bold">TOTAL MESSAGES</div>
+              <div id="stat-total-inquiries" class="fs-2 font-heading fw-bold text-success">0</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 border shadow-sm">
+              <div class="text-muted small fw-bold">NEW INQUIRIES</div>
+              <div id="stat-new-inquiries" class="fs-2 font-heading fw-bold text-warning">0</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 border shadow-sm">
+              <div class="text-muted small fw-bold">RESOLVED MESSAGES</div>
+              <div id="stat-resolved-inquiries" class="fs-2 font-heading fw-bold text-emerald-800">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card p-3 mb-4 bg-white border">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <input type="text" id="inquiry-search-input" class="form-control" placeholder="Search Farmer Name, Phone, or Message content..." oninput="filterInquiries()">
+            </div>
+            <div class="col-md-6">
+              <select id="inquiry-status-filter" class="form-select" onchange="filterInquiries()">
+                <option value="ALL">All Inquiry Statuses</option>
+                <option value="New">New</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inquiries Table -->
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Farmer Name & Contact</th>
+                <th>Subject / Query Type</th>
+                <th>Message Content</th>
+                <th>Status</th>
+                <th>Action / Update</th>
+              </tr>
+            </thead>
+            <tbody id="admin-inquiries-table">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    let allInquiries = [];
+
+    async function renderAdminInquiries() {
+      const tableBody = document.getElementById('admin-inquiries-table');
+      if (!tableBody) return;
+
+      tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted"><i class="fa-solid fa-spinner fa-spin me-2"></i> Loading customer messages...</td></tr>`;
+
+      try {
+        const res = await fetch('/api/inquiries');
+        if (res.ok) {
+          allInquiries = await res.json();
+        }
+      } catch (e) {}
+
+      if (!allInquiries || allInquiries.length === 0) {
+        try {
+          allInquiries = JSON.parse(localStorage.getItem('agri_inquiries') || '[]');
+        } catch(e) { allInquiries = []; }
+      }
+
+      if (allInquiries.length === 0) {
+        allInquiries = [
+          { id: 1, name: 'Muthukumar S.', phone: '9842111223', email: 'muthu@farm.in', subject: 'Soil Testing Appointment', message: 'Need soil sample testing for Paddy field in Cheranmahadevi.', status: 'New', date: 'Today' },
+          { id: 2, name: 'Karthik Raja', phone: '9443122334', email: 'karthik@agri.com', subject: 'Bulk Order Inquiry', message: 'Required 50 bags of NPK 19-19-19 for upcoming season.', status: 'Resolved', date: 'Yesterday' }
+        ];
+      }
+
+      updateInquiryStats(allInquiries);
+      renderInquiriesTableRows(allInquiries);
+    }
+
+    function updateInquiryStats(items) {
+      document.getElementById('stat-total-inquiries').textContent = items.length;
+      document.getElementById('stat-new-inquiries').textContent = items.filter(i => (i.status || 'New') === 'New').length;
+      document.getElementById('stat-resolved-inquiries').textContent = items.filter(i => i.status === 'Resolved').length;
+    }
+
+    function renderInquiriesTableRows(items) {
+      const tableBody = document.getElementById('admin-inquiries-table');
+      if (!tableBody) return;
+
+      if (items.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No customer inquiry messages found.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = items.map(i => {
+        const dateStr = i.createdAt ? new Date(i.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : (i.date || 'Today');
+        const badgeClass = i.status === 'Resolved' ? 'bg-success' : (i.status === 'In Progress' ? 'bg-info text-dark' : 'bg-warning text-dark');
+
+        return `
+          <tr>
+            <td><small class="text-muted fw-bold">${dateStr}</small></td>
+            <td>
+              <div class="fw-bold text-emerald-800">${i.name}</div>
+              <small class="text-muted"><i class="fa-solid fa-phone me-1"></i><a href="tel:${i.phone}" class="text-decoration-none text-muted">${i.phone}</a></small>
+              ${i.email ? `<br><small class="text-muted"><i class="fa-solid fa-envelope me-1"></i>${i.email}</small>` : ''}
+            </td>
+            <td>
+              <span class="badge bg-light text-dark border fw-bold">${i.subject || 'General Inquiry'}</span>
+            </td>
+            <td style="max-width: 320px;">
+              <div class="p-2 rounded bg-light border text-slate-700 small" style="white-space: pre-wrap;">${i.message}</div>
+            </td>
+            <td>
+              <span class="badge ${badgeClass} px-3 py-1 rounded-pill">${i.status || 'New'}</span>
+            </td>
+            <td>
+              <select class="form-select form-select-sm fw-bold border-success" onchange="updateInquiryStatus('${i.id}', this.value)">
+                <option value="New" ${i.status==='New'?'selected':''}>New</option>
+                <option value="In Progress" ${i.status==='In Progress'?'selected':''}>In Progress</option>
+                <option value="Resolved" ${i.status==='Resolved'?'selected':''}>Resolved</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function updateInquiryStatus(inquiryId, newStatus) {
+      try {
+        await fetch(`/api/inquiries/${inquiryId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+      } catch (e) {}
+
+      const idx = allInquiries.findIndex(i => i.id == inquiryId);
+      if (idx > -1) {
+        allInquiries[idx].status = newStatus;
+        try {
+          localStorage.setItem('agri_inquiries', JSON.stringify(allInquiries));
+        } catch(e) {}
+      }
+
+      if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+        agriApp.showToast(`Inquiry status updated to ${newStatus}`, 'success');
+      }
+      updateInquiryStats(allInquiries);
+      renderInquiriesTableRows(allInquiries);
+    }
+
+    function filterInquiries() {
+      const search = (document.getElementById('inquiry-search-input')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('inquiry-status-filter')?.value || 'ALL';
+
+      let filtered = [...allInquiries];
+      if (search) {
+        filtered = filtered.filter(i => 
+          (i.name && i.name.toLowerCase().includes(search)) ||
+          (i.phone && i.phone.includes(search)) ||
+          (i.message && i.message.toLowerCase().includes(search)) ||
+          (i.subject && i.subject.toLowerCase().includes(search))
+        );
+      }
+      if (statusFilter !== 'ALL') {
+        filtered = filtered.filter(i => (i.status || 'New') === statusFilter);
+      }
+      renderInquiriesTableRows(filtered);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAdminInquiries();
+    });
+  </script>
+</body>
+</html>

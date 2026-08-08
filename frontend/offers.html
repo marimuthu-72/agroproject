@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Special Offers & Coupons | G. Saravana Agro Clinic</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div><i class="fa-solid fa-tags me-1 text-warning"></i> Exclusive Harvest Discount Season Coupons</div>
+      <button id="lang-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-language me-1"></i> தமிழ் / EN</button>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-agri sticky-top">
+    <div class="container">
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper"><img src="logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic Offers</div>
+        </div>
+      </a>
+      <a href="index.html" class="btn btn-outline-gold rounded-pill px-3 py-2 fw-bold"><i class="fa-solid fa-house me-1"></i> Store Home</a>
+    </div>
+  </nav>
+
+  <div class="bg-slate-900 text-white py-5 mb-5">
+    <div class="container text-center">
+      <span class="badge badge-gold px-3 py-2 rounded-pill mb-3">HARVEST SPECIALS</span>
+      <h1 class="font-heading fw-bold text-gold-gradient display-5">Farmer Discount Coupons & Sale Offers</h1>
+      <p class="text-white-50 max-w-600 mx-auto">Use these promo codes at checkout to unlock savings on fertilizers, seeds, and battery sprayers.</p>
+    </div>
+  </div>
+
+  <div class="container py-3 mb-5">
+    <div class="row g-4" id="customer-offers-container">
+      <!-- Dynamic Offer Cards Rendered by JS -->
+    </div>
+  </div>
+
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCustomerOffers();
+    });
+
+    function renderCustomerOffers() {
+      const container = document.getElementById('customer-offers-container');
+      if (!container) return;
+
+      let coupons = [];
+      try {
+        const stored = localStorage.getItem('agri_coupons');
+        if (stored) coupons = JSON.parse(stored);
+      } catch(e) {}
+
+      if (!coupons || coupons.length === 0) {
+        coupons = [
+          { code: 'KISAAN15', type: 'percentage', value: 15, minOrder: 0, description: 'Flat 15% discount on Vermicompost, Bio Fertilizers & Seeds', status: 'Active' },
+          { code: 'FREEDEL', type: 'free_shipping', value: 0, minOrder: 1000, description: 'Free doorstep tractor delivery on orders above ₹1,000', status: 'Active' },
+          { code: 'SPRAYER500', type: 'fixed', value: 500, minOrder: 2000, description: '₹500 instant discount on 16L Battery Knapsack Sprayer', status: 'Active' }
+        ];
+      }
+
+      const activeCoupons = coupons.filter(c => c.status === 'Active');
+
+      if (activeCoupons.length === 0) {
+        container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><h5>No active promo coupons available right now. Check back soon!</h5></div>`;
+        return;
+      }
+
+      container.innerHTML = activeCoupons.map((c) => {
+        let badgeText = '';
+        let badgeColor = 'bg-danger';
+        if (c.type === 'percentage') {
+          badgeText = `FLAT ${c.value}% OFF`;
+          badgeColor = 'bg-danger';
+        } else if (c.type === 'fixed') {
+          badgeText = `₹${c.value} DISCOUNT`;
+          badgeColor = 'bg-primary';
+        } else {
+          badgeText = 'FREE DELIVERY';
+          badgeColor = 'bg-success';
+        }
+
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="glass-card p-4 border border-emerald-300 h-100 d-flex flex-column justify-content-between shadow-sm">
+              <div>
+                <span class="badge ${badgeColor} text-white fw-bold mb-2">${badgeText}</span>
+                <h4 class="font-heading fw-bold mb-2 text-emerald-950">${c.code}</h4>
+                <p class="text-muted small mb-3">${c.description}</p>
+              </div>
+
+              <div>
+                <div class="p-3 bg-slate-50 border border-dashed rounded-3 d-flex justify-content-between align-items-center mb-3">
+                  <span class="fs-5 font-heading fw-bold text-emerald-800">${c.code}</span>
+                  <button class="btn btn-sm btn-gold fw-bold" onclick="navigator.clipboard.writeText('${c.code}'); if(typeof agriApp !== 'undefined' && agriApp.showToast) agriApp.showToast('Copied code ${c.code} to clipboard!', 'success');">Copy Code</button>
+                </div>
+                <small class="text-muted"><i class="fa-solid fa-check-circle text-success me-1"></i> ${c.minOrder > 0 ? 'Min order ₹' + c.minOrder : 'No minimum order required'}</small>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

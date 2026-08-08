@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G. Saravana Agro Clinic | Premier Agriculture Fertilizer E-Store</title>
+  <meta name="description" content="India's leading agriculture e-commerce store for high-potency NPK fertilizers, certified hybrid seeds, bio-pesticides, and expert farming solutions.">
+
+  <!-- PWA & Mobile Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a3622">
+
+  <!-- Bootstrap 5 & Font Awesome 6 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Design System CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Header Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="top-bar-ticker" data-i18n="top_helpline">
+        <i class="fa-solid fa-location-dot text-warning me-1"></i> Main Road, Cheranmahadevi, Tirunelveli | Helpline & WhatsApp: <strong>+91 63791 20465</strong>
+      </div>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <a href="login.html?tab=user" class="btn top-bar-btn btn-light text-emerald-800"><i class="fa-solid fa-user me-1"></i> User Login</a>
+        <a href="login.html?tab=admin" class="btn top-bar-btn badge-gold"><i class="fa-solid fa-shield-halved me-1"></i> Admin ERP</a>
+        <button id="lang-toggle" class="btn top-bar-btn btn-outline-light">
+          <i class="fa-solid fa-language me-1"></i> தமிழ் / EN
+        </button>
+        <button id="dark-mode-toggle" class="btn top-bar-btn btn-outline-light">
+          <i class="fa-solid fa-moon me-1"></i> Theme
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main E-Commerce Sticky Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-agri sticky-top">
+    <div class="container">
+      
+      <!-- Brand Logo -->
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper">
+          <img src="logo.png" alt="G. Saravana Agro Clinic Logo">
+        </div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic, Cheranmahadevi</div>
+        </div>
+      </a>
+
+      <!-- Navbar Toggler -->
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <i class="fa-solid fa-bars fs-4 text-emerald-800"></i>
+      </button>
+
+      <!-- Nav Content & Search -->
+      <div class="collapse navbar-collapse" id="navContent">
+        
+        <!-- Search Input Bar -->
+        <div class="nav-search-box mx-lg-4 my-2 my-lg-0">
+          <i class="fa-solid fa-magnifying-glass nav-search-icon"></i>
+          <input type="text" id="global-search-input" class="nav-search-input" placeholder="Search fertilizers, seeds, pesticides..." oninput="handleGlobalSearch(this.value)">
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-1 align-items-center">
+          <li class="nav-item"><a class="nav-link nav-link-agri active" href="index.html" data-i18n="nav_home">Home</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="products.html" data-i18n="nav_products">Products</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="services.html" data-i18n="nav_services">Services</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="offers.html" data-i18n="nav_offers">Offers</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="about.html" data-i18n="nav_about">About</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="contact.html" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+
+        <!-- Action Icons -->
+        <div class="d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0">
+          <a href="wishlist.html" class="action-icon-btn" title="Wishlist">
+            <i class="fa-solid fa-heart"></i>
+            <span id="wishlist-count-badge" class="action-badge" style="display:none;">0</span>
+          </a>
+
+          <a href="cart.html" class="btn btn-gold rounded-pill px-3 py-2 d-flex align-items-center gap-2 font-heading" title="Cart">
+            <i class="fa-solid fa-cart-shopping fs-6"></i>
+            <span data-i18n="nav_cart">Cart</span>
+            <span id="cart-count-badge" class="badge rounded-pill bg-dark text-white px-2">0</span>
+          </a>
+
+          <a href="profile.html" class="action-icon-btn ms-1" title="Account Profile">
+            <i class="fa-solid fa-user"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Promotional Section -->
+  <section class="hero-section">
+    <div class="hero-overlay-grid"></div>
+    <div class="container position-relative z-2">
+      <div class="row align-items-center g-4">
+        
+        <div class="col-lg-7">
+          <span class="badge badge-gold px-3 py-2 rounded-pill mb-3">
+            <i class="fa-solid fa-award me-1"></i> Certified Tamil Nadu Agro Retailer
+          </span>
+          <h1 class="hero-title text-gold-gradient font-heading" data-i18n="hero_title">
+            Your Trusted Agriculture Fertilizer Partner
+          </h1>
+          <p class="hero-subtitle" data-i18n="hero_sub">
+            High-Potency Chemical & Organic Fertilizers, Certified Hybrid Seeds, Bio-Pesticides, and Digital Soil Testing Solutions tailored for maximum crop yield.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3">
+            <a href="products.html" class="btn btn-gold btn-lg font-heading">
+              <i class="fa-solid fa-bag-shopping me-2"></i> Shop Catalog
+            </a>
+            <a href="offers.html" class="btn btn-outline-gold btn-lg font-heading">
+              <i class="fa-solid fa-tags me-2"></i> Claim 15% Discount
+            </a>
+          </div>
+
+          <!-- Quick Stats Row -->
+          <div class="row g-3 mt-4 pt-3 border-top border-secondary">
+            <div class="col-4">
+              <h3 class="fw-bold font-heading text-warning mb-0">15+ Yrs</h3>
+              <small class="text-white-50" data-i18n="stat_exp">Experience</small>
+            </div>
+            <div class="col-4">
+              <h3 class="fw-bold font-heading text-warning mb-0">25,000+</h3>
+              <small class="text-white-50" data-i18n="stat_farmers">Happy Farmers</small>
+            </div>
+            <div class="col-4">
+              <h3 class="fw-bold font-heading text-warning mb-0">Fast Door</h3>
+              <small class="text-white-50" data-i18n="stat_delivery">Tractor Delivery</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5 text-center">
+          <div class="glass-card p-4 text-start position-relative">
+            <div class="badge bg-danger text-white position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill fw-bold">
+              HOT SALE - 20% OFF
+            </div>
+            <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=600&q=80" alt="NPK Fertilizer" class="img-fluid rounded-4 mb-3 shadow" style="height:240px; width:100%; object-fit:cover;">
+            <span class="product-category">Featured Offer</span>
+            <h4 class="font-heading fw-bold text-white mb-2">NPK 19-19-19 Complex Fertilizer</h4>
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="fs-3 fw-bold text-gold-gradient font-heading">₹450</span>
+              <span class="text-white-50 text-decoration-line-through fs-6">₹550</span>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-gold flex-fill py-2 fw-bold font-heading" onclick="agriApp.buyNow('prod-1')">
+                <i class="fa-solid fa-bolt me-1"></i> Buy Now
+              </button>
+              <button class="btn btn-outline-light flex-fill py-2 fw-bold font-heading" onclick="agriApp.addToCart('prod-1')">
+                <i class="fa-solid fa-cart-plus me-1"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- E-Commerce Category Highlights -->
+  <section class="py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="badge badge-gold px-3 py-2 rounded-pill mb-2">CATEGORIES</span>
+        <h2 class="font-heading fw-bold display-6">Explore Agriculture Inputs</h2>
+        <p class="text-muted">Browse our full range of certified high-potency farming essentials</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="category-card" onclick="window.location.href='products.html?cat=Fertilizers'">
+            <div class="category-icon"><i class="fa-solid fa-flask"></i></div>
+            <h6 class="font-heading fw-bold mb-1">Fertilizers</h6>
+            <small class="text-muted">NPK, DAP, Urea</small>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="category-card" onclick="window.location.href='products.html?cat=Organic Fertilizers'">
+            <div class="category-icon"><i class="fa-solid fa-leaf"></i></div>
+            <h6 class="font-heading fw-bold mb-1">Organic</h6>
+            <small class="text-muted">Vermicompost</small>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="category-card" onclick="window.location.href='products.html?cat=Bio Fertilizers'">
+            <div class="category-icon"><i class="fa-solid fa-bacterium"></i></div>
+            <h6 class="font-heading fw-bold mb-1">Bio Fertilizers</h6>
+            <small class="text-muted">Azospirillum</small>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="category-card" onclick="window.location.href='products.html?cat=Seeds'">
+            <div class="category-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+            <h6 class="font-heading fw-bold mb-1">Hybrid Seeds</h6>
+            <small class="text-muted">Paddy, Cotton</small>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="category-card" onclick="window.location.href='products.html?cat=Pesticides'">
+            <div class="category-icon"><i class="fa-solid fa-shield-virus"></i></div>
+            <h6 class="font-heading fw-bold mb-1">Pesticides</h6>
+            <small class="text-muted">Neem Oil, Bio</small>
+          </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="category-card" onclick="window.location.href='products.html?cat=Farming Equipment'">
+            <div class="category-icon"><i class="fa-solid fa-tractor"></i></div>
+            <h6 class="font-heading fw-bold mb-1">Equipment</h6>
+            <small class="text-muted">Battery Sprayers</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Best Selling Products Catalog Grid -->
+  <section class="py-5">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-3">
+        <div>
+          <span class="badge badge-gold px-3 py-2 rounded-pill mb-2">TOP SELLING</span>
+          <h2 class="font-heading fw-bold display-6 mb-0" data-i18n="sec_catalog_title">Top Selling Fertilizers & Inputs</h2>
+        </div>
+        <a href="products.html" class="btn btn-outline-gold rounded-pill fw-bold">View Full Catalog <i class="fa-solid fa-arrow-right ms-1"></i></a>
+      </div>
+
+      <div id="home-products-grid" class="row g-4">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick View Product Modal -->
+  <div class="modal fade" id="quickViewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-card p-2">
+        <div class="modal-header border-0">
+          <h5 id="qv-title" class="modal-title font-heading fw-bold">Product Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-4 align-items-center">
+            <div class="col-md-6 text-center">
+              <img id="qv-img" src="" alt="Product" class="img-fluid rounded-4 shadow" style="max-height:280px; object-fit:contain;">
+            </div>
+            <div class="col-md-6">
+              <span id="qv-category" class="product-category">Category</span>
+              <div class="d-flex align-items-center gap-2 my-2">
+                <span id="qv-price" class="fs-2 fw-bold text-emerald-800 font-heading">₹0</span>
+                <span id="qv-original" class="text-muted text-decoration-line-through fs-6"></span>
+              </div>
+              <p id="qv-desc" class="text-muted small mb-4">Description text...</p>
+              
+              <div class="d-flex gap-2">
+                <button id="qv-buy-btn" class="btn btn-gold flex-fill py-3 font-heading fw-bold">
+                  <i class="fa-solid fa-bolt me-2"></i> Buy Now
+                </button>
+                <button id="qv-add-btn" class="btn btn-emerald flex-fill py-3 font-heading fw-bold">
+                  <i class="fa-solid fa-cart-shopping me-2"></i> Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E-Commerce Footer -->
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    function renderHomeProducts() {
+      const container = document.getElementById('home-products-grid');
+      if (!container) return;
+
+      const products = agriApp.getProducts().slice(0, 8);
+      const currentLang = getCurrentLanguage();
+      const isTamil = currentLang === 'ta';
+
+      container.innerHTML = products.map(p => {
+        const name = isTamil ? (p.nameTa || p.name) : p.name;
+        const categoryName = t(p.category);
+        const buyText = t('Buy Now');
+        const discountPercent = p.originalPrice ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
+        const isWish = agriApp.wishlist.includes(p.id);
+
+        return `
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="product-card">
+              <div class="product-img-wrapper">
+                ${discountPercent > 0 ? `<span class="product-badge-discount">-${discountPercent}% OFF</span>` : ''}
+                ${p.isBestSeller ? `<span class="product-badge-tag"><i class="fa-solid fa-star me-1"></i> BEST SELLER</span>` : ''}
+                <img src="${p.image}" alt="${name}" class="product-img" onclick="agriApp.openQuickView('${p.id}')">
+                <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="agriApp.toggleWishlist('${p.id}'); renderHomeProducts();">
+                  <i class="fa-${isWish ? 'solid' : 'regular'} fa-heart"></i>
+                </button>
+              </div>
+              <div class="product-info">
+                <span class="product-category">${categoryName}</span>
+                <h6 class="product-title" onclick="agriApp.openQuickView('${p.id}')">${name}</h6>
+                <div class="product-rating">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star-half-stroke"></i>
+                  <span class="text-muted ms-1">(${p.rating})</span>
+                </div>
+                <div class="product-price-row">
+                  <div>
+                    <span class="product-price">₹${p.price}</span>
+                    ${p.originalPrice ? `<span class="product-original-price">₹${p.originalPrice}</span>` : ''}
+                  </div>
+                  <div class="d-flex gap-1">
+                    <button class="add-cart-btn" onclick="agriApp.addToCart('${p.id}')" title="${t('Add to Cart')}">
+                      <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                    <button class="btn btn-gold btn-sm rounded-pill fw-bold font-heading px-2" onclick="agriApp.buyNow('${p.id}')">
+                      ${buyText}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleGlobalSearch(query) {
+      if (query.trim().length > 2) {
+        window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHomeProducts();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Management | ERP Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-brand-icon"><img src="../logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="fw-bold font-heading">Saravana ERP</div>
+          <div class="small text-slate-400" style="font-size:0.7rem;">Cheranmahadevi</div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item"><i class="fa-solid fa-chart-pie fs-5"></i> <span>Dashboard</span></a>
+        <a href="products.html" class="admin-nav-item active"><i class="fa-solid fa-boxes-stacked fs-5"></i> <span>Product Management</span></a>
+        <a href="inventory.html" class="admin-nav-item"><i class="fa-solid fa-warehouse fs-5"></i> <span>Stock Inventory</span></a>
+        <a href="orders.html" class="admin-nav-item"><i class="fa-solid fa-truck-ramp-box fs-5"></i> <span>Live Orders</span></a>
+        <a href="customers.html" class="admin-nav-item"><i class="fa-solid fa-users fs-5"></i> <span>Farmer Directory</span></a>
+        <a href="offers.html" class="admin-nav-item"><i class="fa-solid fa-tags fs-5"></i> <span>Coupons & Offers</span></a>
+        <a href="transactions.html" class="admin-nav-item"><i class="fa-solid fa-receipt fs-5"></i> <span>Revenue & Payments</span></a>
+        <a href="settings.html" class="admin-nav-item"><i class="fa-solid fa-user-lock fs-5"></i> <span>Account Security</span></a>
+        
+        <div class="mt-auto pt-3 border-top border-secondary">
+          <a href="../index.html" class="admin-nav-item"><i class="fa-solid fa-store fs-5"></i> <span>View Main E-Store</span></a>
+          <button onclick="adminLogout()" class="admin-nav-item border-0 bg-transparent text-danger w-100 text-start"><i class="fa-solid fa-right-from-bracket fs-5"></i> <span>Log Out</span></button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-page-title">Product Catalog & Inventory Management</h1>
+        <button class="btn btn-warning fw-bold text-dark font-heading" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          <i class="fa-solid fa-plus me-1"></i> Add New Product
+        </button>
+      </div>
+
+      <div class="admin-content">
+        
+        <div class="admin-table-container">
+          <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="font-heading fw-bold mb-0"><i class="fa-solid fa-boxes-stacked me-2 text-warning"></i>Store Catalog Items</h5>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product Details</th>
+                <th>Price</th>
+                <th>Stock Level</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-table">
+              <!-- Rendered via admin.js -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Product Modal -->
+  <div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-heading fw-bold">Add New Agricultural Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="handleCreateProduct(event)">
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">Product Name (English) *</label>
+                <input type="text" id="add-p-name" class="form-control" required placeholder="e.g. Zinc Sulphate 21%">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">Product Name (Tamil) *</label>
+                <input type="text" id="add-p-name-ta" class="form-control" required placeholder="e.g. ஜிங்க் சல்பேட்">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">Category *</label>
+                <select id="add-p-cat" class="form-select">
+                  <option value="Fertilizers">Fertilizers</option>
+                  <option value="Organic Fertilizers">Organic Fertilizers</option>
+                  <option value="Bio Fertilizers">Bio Fertilizers</option>
+                  <option value="Seeds">Seeds</option>
+                  <option value="Pesticides">Pesticides</option>
+                  <option value="Plant Growth Promoters">Plant Growth Promoters</option>
+                  <option value="Farming Equipment">Farming Equipment</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold small">Price (₹) *</label>
+                <input type="number" id="add-p-price" class="form-control" required min="10" placeholder="500">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold small">Stock Units *</label>
+                <input type="number" id="add-p-stock" class="form-control" required min="0" placeholder="100">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small">Image URL (Optional)</label>
+                <input type="url" id="add-p-img" class="form-control" placeholder="https://images.unsplash.com/...">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small">Description</label>
+                <textarea id="add-p-desc" class="form-control" rows="2" placeholder="Enter dosage & crop benefits..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-warning font-heading fw-bold text-dark">Save Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-heading fw-bold">Edit Product Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="handleUpdateProduct(event)">
+          <input type="hidden" id="edit-p-id">
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">Product Name (English)</label>
+                <input type="text" id="edit-p-name" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">Product Name (Tamil)</label>
+                <input type="text" id="edit-p-name-ta" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">Category</label>
+                <select id="edit-p-cat" class="form-select">
+                  <option value="Fertilizers">Fertilizers</option>
+                  <option value="Organic Fertilizers">Organic Fertilizers</option>
+                  <option value="Bio Fertilizers">Bio Fertilizers</option>
+                  <option value="Seeds">Seeds</option>
+                  <option value="Pesticides">Pesticides</option>
+                  <option value="Plant Growth Promoters">Plant Growth Promoters</option>
+                  <option value="Farming Equipment">Farming Equipment</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold small">Price (₹)</label>
+                <input type="number" id="edit-p-price" class="form-control" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold small">Stock Units</label>
+                <input type="number" id="edit-p-stock" class="form-control" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small">Image URL</label>
+                <input type="url" id="edit-p-img" class="form-control">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small">Description</label>
+                <textarea id="edit-p-desc" class="form-control" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary font-heading fw-bold">Update Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    function handleCreateProduct(e) {
+      e.preventDefault();
+      const name = document.getElementById('add-p-name').value;
+      const nameTa = document.getElementById('add-p-name-ta').value;
+      const cat = document.getElementById('add-p-cat').value;
+      const price = Number(document.getElementById('add-p-price').value);
+      const stock = Number(document.getElementById('add-p-stock').value);
+      const img = document.getElementById('add-p-img').value || 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80';
+      const desc = document.getElementById('add-p-desc').value;
+
+      const newP = {
+        id: 'prod-' + (Date.now()),
+        name, nameTa, category: cat, price, originalPrice: Math.round(price * 1.2), rating: 4.8, image: img, description: desc, stock, isBestSeller: false
+      };
+
+      let products = agriApp.getProducts();
+      products.unshift(newP);
+      agriApp.saveProducts(products);
+
+      const modalEl = document.getElementById('addProductModal');
+      if (modalEl) {
+        const instance = bootstrap.Modal.getInstance(modalEl);
+        if (instance) instance.hide();
+      }
+
+      agriApp.showToast(`Product "${name}" added successfully!`);
+      renderAdminProducts();
+    }
+  </script>
+</body>
+</html>

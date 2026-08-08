@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Farmer Account | G. Saravana Agro Clinic</title>
+  <meta name="description" content="Register a new farmer account to buy certified fertilizers, seeds, and bio-products.">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="auth-split-wrapper">
+    <!-- Left Banner Side -->
+    <div class="auth-banner-side">
+      <div>
+        <a href="index.html" class="navbar-brand-agri mb-4">
+          <div class="brand-icon-wrapper">
+            <img src="logo.png" alt="G. Saravana Agro Clinic Logo">
+          </div>
+          <div>
+            <div class="brand-title text-white">G. Saravana</div>
+            <div class="brand-subtitle text-gold-gradient">Agro Clinic, Cheranmahadevi</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="my-auto py-5">
+        <span class="badge badge-gold mb-3 px-3 py-2 rounded-pill">
+          <i class="fa-solid fa-gift me-1"></i> Special New Farmer Benefit
+        </span>
+        <h1 class="display-4 font-heading fw-extrabold text-white mb-3">Join 15,000+ Happy Farmers</h1>
+        <p class="lead text-white-50 mb-4" style="max-width: 520px;">
+          Register today and unlock flat 15% OFF on your first purchase of organic fertilizers & hybrid seeds using promo code <strong>KISAAN15</strong>.
+        </p>
+
+        <div class="d-flex flex-column gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="brand-icon-wrapper" style="width: 40px; height: 40px; font-size: 1.1rem;">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-white">Free Doorplace Tractor Delivery</div>
+              <small class="text-white-50">Direct delivery to your farmland</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="brand-icon-wrapper" style="width: 40px; height: 40px; font-size: 1.1rem;">
+              <i class="fa-solid fa-flask-vial"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-white">Soil Testing & Advisory</div>
+              <small class="text-white-50">Free NPK soil card recommendations</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center text-white-50 small">
+        <span>&copy; 2026 G. Saravana Agro Clinic</span>
+        <a href="login.html" class="text-gold-gradient fw-bold">Already Have Account?</a>
+      </div>
+    </div>
+
+    <!-- Right Form Side -->
+    <div class="auth-form-side">
+      <div class="auth-card" style="max-width: 480px;">
+        <div class="text-center mb-4">
+          <div class="d-inline-flex p-3 rounded-circle bg-emerald-50 text-emerald-800 mb-3 shadow-sm">
+            <i class="fa-solid fa-user-plus fs-2"></i>
+          </div>
+          <h2 class="font-heading fw-bold mb-1">Create Account</h2>
+          <p class="text-muted small">Enter your details to register as a farmer customer</p>
+        </div>
+
+        <form onsubmit="handleRegister(event)">
+          <div class="row g-3 mb-3">
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted text-uppercase">Full Name / பெயர்</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-user text-emerald-700"></i></span>
+                <input type="text" id="reg-name" class="form-control form-control-agri border-start-0 ps-0" required placeholder="e.g. Ramanathan K.">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted text-uppercase">Mobile Number *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-phone text-emerald-700"></i></span>
+                <input type="tel" id="reg-phone" class="form-control form-control-agri border-start-0 ps-0 phone-input" required placeholder="10 Digit Mobile Number" inputmode="numeric" pattern="[0-9]*" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted text-uppercase">District / ஊர்</label>
+              <select id="reg-district" class="form-select form-control-agri">
+                <option value="Tirunelveli">Tirunelveli</option>
+                <option value="Cheranmahadevi" selected>Cheranmahadevi</option>
+                <option value="Tenkasi">Tenkasi</option>
+                <option value="Tuticorin">Tuticorin</option>
+                <option value="Thanjavur">Thanjavur</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted text-uppercase">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-envelope text-emerald-700"></i></span>
+                <input type="email" id="reg-email" class="form-control form-control-agri border-start-0 ps-0" required placeholder="farmer@agro.com">
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted text-uppercase">Create Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-lock text-emerald-700"></i></span>
+                <input type="password" id="reg-password" class="form-control form-control-agri border-start-0 ps-0" required placeholder="••••••••" oninput="checkPassStrength(this.value)">
+                <button type="button" class="btn btn-outline-secondary border-start-0 border-top border-bottom border-end" onclick="togglePassword('reg-password', 'reg-pass-icon')">
+                  <i id="reg-pass-icon" class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="progress mt-2" style="height: 4px;">
+                <div id="pass-strength-bar" class="progress-bar bg-danger" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="termsCheck" required checked>
+            <label class="form-check-label small text-muted" for="termsCheck">
+              I agree to the <a href="#" class="text-emerald-700 fw-bold">Terms of Service</a> & <a href="#" class="text-emerald-700 fw-bold">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-gold w-100 py-3 fs-6 fw-bold shadow-sm mb-3">
+            <i class="fa-solid fa-user-plus me-2"></i> Register Account
+          </button>
+        </form>
+
+        <div class="text-center mt-3">
+          <span class="text-muted small">Already have a farmer account? </span>
+          <a href="login.html" class="text-emerald-700 fw-bold small">Log In Here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    function checkPassStrength(val) {
+      const bar = document.getElementById('pass-strength-bar');
+      if (!bar) return;
+      if (val.length === 0) {
+        bar.style.width = '0%';
+      } else if (val.length < 6) {
+        bar.style.width = '33%';
+        bar.className = 'progress-bar bg-danger';
+      } else if (val.length < 10) {
+        bar.style.width = '66%';
+        bar.className = 'progress-bar bg-warning';
+      } else {
+        bar.style.width = '100%';
+        bar.className = 'progress-bar bg-success';
+      }
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const phone = document.getElementById('reg-phone').value;
+      const district = document.getElementById('reg-district').value;
+
+      const user = { name, email, phone, district, role: 'farmer' };
+      localStorage.setItem('agri_user', JSON.stringify(user));
+      localStorage.setItem('agri_token', 'jwt_mock_token_' + Date.now());
+      agriApp.user = user;
+
+      agriApp.showToast('Registration Successful! Welcome to Saravana Agro Store.', 'success');
+      setTimeout(() => {
+        window.location.href = 'profile.html';
+      }, 800);
+    }
+  </script>
+</body>
+</html>

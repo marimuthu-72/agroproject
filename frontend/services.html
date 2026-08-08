@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agronomy Services | G. Saravana Agro Clinic</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div><i class="fa-solid fa-flask-vial me-1 text-warning"></i> Digital Soil Testing & Agronomy Consultation</div>
+      <button id="lang-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-language me-1"></i> தமிழ் / EN</button>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-agri sticky-top">
+    <div class="container">
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper"><img src="logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic Services</div>
+        </div>
+      </a>
+      <a href="index.html" class="btn btn-outline-gold rounded-pill px-3 py-2 fw-bold"><i class="fa-solid fa-house me-1"></i> Store Home</a>
+    </div>
+  </nav>
+
+  <div class="bg-slate-900 text-white py-5 mb-5">
+    <div class="container text-center">
+      <span class="badge badge-gold px-3 py-2 rounded-pill mb-3">EXPERT SOLUTIONS</span>
+      <h1 class="font-heading fw-bold text-gold-gradient display-5">Our Specialized Agriculture Services</h1>
+      <p class="text-white-50 max-w-600 mx-auto">From laboratory soil testing to doorstep tractor delivery, we support your farming every step of the way.</p>
+    </div>
+  </div>
+
+  <div class="container py-3 mb-5">
+    <div class="row g-4">
+      
+      <div class="col-md-4">
+        <div class="glass-card p-4 text-center h-100">
+          <div class="category-icon mb-3"><i class="fa-solid fa-flask-vial"></i></div>
+          <h4 class="font-heading fw-bold mb-2">Soil Testing & Health Cards</h4>
+          <p class="text-muted small mb-4">Digital soil testing for NPK levels, pH balance, and organic carbon count to recommend precise fertilizer dosing.</p>
+          <button onclick="agriApp.showToast('Booked Free Soil Testing Session! Our team will contact you.', 'success');" class="btn btn-gold btn-sm rounded-pill fw-bold">Book Soil Test</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card p-4 text-center h-100">
+          <div class="category-icon mb-3"><i class="fa-solid fa-user-doctor"></i></div>
+          <h4 class="font-heading fw-bold mb-2">Crop Protection Advisory</h4>
+          <p class="text-muted small mb-4">Personalized seasonal crop protection advice from senior agronomists to protect against pests and boost yield.</p>
+          <button onclick="agriApp.showToast('Connecting to Agronomist Hotline...', 'info');" class="btn btn-gold btn-sm rounded-pill fw-bold">Call Agronomist</button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass-card p-4 text-center h-100">
+          <div class="category-icon mb-3"><i class="fa-solid fa-truck-fast"></i></div>
+          <h4 class="font-heading fw-bold mb-2">Express Farm Door Delivery</h4>
+          <p class="text-muted small mb-4">Safe, fast tractor and truck delivery directly to your farmland across Cheranmahadevi & surrounding sectors.</p>
+          <a href="products.html" class="btn btn-gold btn-sm rounded-pill fw-bold">Order Supplies</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+</body>
+</html>

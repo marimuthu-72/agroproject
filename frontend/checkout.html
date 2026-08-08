@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout & Secure Payment | G. Saravana Agro Clinic</title>
+  <meta name="description" content="Complete your order for fertilizers, seeds, and equipment with secure 256-bit payment.">
+
+  <!-- Bootstrap 5 & Font Awesome 6 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div><i class="fa-solid fa-lock me-1 text-warning"></i> 256-Bit SSL Encrypted Amazon-Grade Checkout</div>
+      <div class="d-flex align-items-center gap-2">
+        <button id="lang-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-language me-1"></i> தமிழ் / EN</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-agri sticky-top">
+    <div class="container">
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper"><img src="logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic Secure Checkout</div>
+        </div>
+      </a>
+      <a href="cart.html" class="btn btn-outline-gold rounded-pill px-3 py-2 fw-bold">
+        <i class="fa-solid fa-cart-shopping me-1"></i> Return to Cart
+      </a>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      
+      <!-- Checkout Left Panel: Customer & Payment Details -->
+      <div class="col-lg-8">
+        <form id="checkout-form" onsubmit="handleOrderSubmission(event)">
+          
+          <!-- SECTION 1: CUSTOMER & DELIVERY DETAILS -->
+          <div class="glass-card p-4 mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+              <h4 class="font-heading fw-bold text-emerald-800 mb-0">
+                <i class="fa-solid fa-user-gear me-2 text-warning"></i>1. Customer & Delivery Address
+              </h4>
+              <span class="badge badge-gold">STEP 1 OF 2</span>
+            </div>
+            
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Full Name *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-user text-emerald-700"></i></span>
+                  <input type="text" id="cust-name" class="form-control form-control-agri border-start-0 ps-0" required placeholder="e.g. Full Name" value="">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Mobile Phone Number *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-phone text-emerald-700"></i></span>
+                  <input type="tel" id="cust-phone" class="form-control form-control-agri border-start-0 ps-0 phone-input" required placeholder="10 Digit Mobile Number" inputmode="numeric" pattern="[0-9]*" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)" value="">
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Email Address *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-envelope text-emerald-700"></i></span>
+                  <input type="email" id="cust-email" class="form-control form-control-agri border-start-0 ps-0" required placeholder="farmer@domain.com" value="">
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Delivery Address (Street / Land Plot) *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-location-dot text-emerald-700"></i></span>
+                  <textarea id="cust-address" class="form-control form-control-agri border-start-0 ps-0" rows="2" required placeholder="Enter Door No. / Street / Land Plot"></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-muted text-uppercase">District *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-city text-emerald-700"></i></span>
+                  <input type="text" id="cust-district" class="form-control form-control-agri border-start-0 ps-0" required value="Cheranmahadevi">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-muted text-uppercase">State *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-map-location-dot text-emerald-700"></i></span>
+                  <input type="text" id="cust-state" class="form-control form-control-agri border-start-0 ps-0" required value="Tamil Nadu">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-bold small text-muted text-uppercase">Pincode *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-hashtag text-emerald-700"></i></span>
+                  <input type="text" id="cust-pin" class="form-control form-control-agri border-start-0 ps-0" required maxlength="6" value="627414">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: PAYMENT METHOD SELECTION -->
+          <div class="glass-card p-4 mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+              <h4 class="font-heading fw-bold text-emerald-800 mb-0">
+                <i class="fa-solid fa-credit-card me-2 text-warning"></i>2. Payment Options
+              </h4>
+              <span class="badge badge-gold">STEP 2 OF 2</span>
+            </div>
+
+            <!-- Payment Radio Buttons -->
+            <div class="d-flex flex-column gap-3 mb-4">
+              
+              <!-- Option 1: Instant UPI -->
+              <div class="form-check p-3 rounded-3 border bg-slate-50">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="payUPI" value="UPI" checked onclick="togglePaymentView('UPI')">
+                <label class="form-check-label fw-bold d-flex align-items-center justify-content-between w-100 cursor-pointer" for="payUPI">
+                  <span><i class="fa-brands fa-google-pay fs-4 me-2 text-success"></i> Instant UPI (Google Pay, PhonePe, Paytm)</span>
+                  <span class="badge bg-success-subtle text-success border border-success">Fastest</span>
+                </label>
+              </div>
+
+              <!-- Option 2: Credit Card -->
+              <div class="form-check p-3 rounded-3 border bg-slate-50">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="payCreditCard" value="Credit Card" onclick="togglePaymentView('CARD')">
+                <label class="form-check-label fw-bold d-flex align-items-center justify-content-between w-100 cursor-pointer" for="payCreditCard">
+                  <span><i class="fa-solid fa-credit-card fs-5 me-2 text-primary"></i> Credit Card</span>
+                  <div class="d-flex gap-2 fs-5 text-muted">
+                    <i class="fa-brands fa-cc-visa text-primary"></i>
+                    <i class="fa-brands fa-cc-mastercard text-danger"></i>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Option 3: Debit Card -->
+              <div class="form-check p-3 rounded-3 border bg-slate-50">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="payDebitCard" value="Debit Card" onclick="togglePaymentView('CARD')">
+                <label class="form-check-label fw-bold d-flex align-items-center justify-content-between w-100 cursor-pointer" for="payDebitCard">
+                  <span><i class="fa-solid fa-credit-card fs-5 me-2 text-info"></i> Debit Card (All Banks & RuPay)</span>
+                  <span class="badge bg-light text-dark border">RuPay / Visa / Master</span>
+                </label>
+              </div>
+
+              <!-- Option 4: Net Banking -->
+              <div class="form-check p-3 rounded-3 border bg-slate-50">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="payNetBanking" value="Net Banking" onclick="togglePaymentView('NETBANKING')">
+                <label class="form-check-label fw-bold d-flex align-items-center justify-content-between w-100 cursor-pointer" for="payNetBanking">
+                  <span><i class="fa-solid fa-building-columns fs-5 me-2 text-secondary"></i> Net Banking</span>
+                  <span class="small text-muted">Direct Bank Transfer</span>
+                </label>
+              </div>
+
+              <!-- Option 5: Cash on Delivery (COD) -->
+              <div class="form-check p-3 rounded-3 border bg-slate-50">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="payCOD" value="Cash on Delivery (COD)" onclick="togglePaymentView('COD')">
+                <label class="form-check-label fw-bold d-flex align-items-center justify-content-between w-100 cursor-pointer" for="payCOD">
+                  <span><i class="fa-solid fa-hand-holding-dollar fs-5 me-2 text-warning"></i> Cash on Delivery (COD)</span>
+                  <span class="badge bg-warning-subtle text-dark border border-warning">Pay at Farm</span>
+                </label>
+              </div>
+
+            </div>
+
+            <!-- DYNAMIC PAYMENT VIEWS -->
+            
+            <!-- 1. UPI VIEW -->
+            <div id="view-upi" class="p-3 bg-white border rounded-3">
+              <div class="row align-items-center g-3">
+                <div class="col-md-4 text-center">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=saravanaagro@upi&pn=SaravanaAgroStore" alt="UPI QR" class="img-fluid rounded-3 border p-2">
+                  <div class="small text-muted mt-1">Scan & Pay via GPay / PhonePe</div>
+                </div>
+                <div class="col-md-8">
+                  <label class="form-label fw-bold small text-muted text-uppercase">Enter your UPI ID / VPA</label>
+                  <div class="input-group">
+                    <input type="text" id="upi-vpa" class="form-control form-control-agri" placeholder="e.g. mobile@upi or farmer@okicici" value="ramanathan@okicici">
+                    <button type="button" class="btn btn-emerald fw-bold" onclick="agriApp.showToast('UPI VPA Verified!', 'success')">Verify VPA</button>
+                  </div>
+                  <small class="text-success fw-bold mt-1 d-block"><i class="fa-solid fa-shield-check me-1"></i> Verified Merchant: G. Saravana Agro Clinic</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. CARD PAYMENT FORM (CREDIT / DEBIT) -->
+            <div id="view-card" class="p-4 bg-white border rounded-3" style="display:none;">
+              <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <h6 class="font-heading fw-bold mb-0 text-emerald-800"><i class="fa-solid fa-shield-halved me-1 text-warning"></i> Secure Card Details</h6>
+                <div class="d-flex gap-2 fs-4 text-emerald-700">
+                  <i class="fa-brands fa-cc-visa"></i>
+                  <i class="fa-brands fa-cc-mastercard"></i>
+                  <i class="fa-solid fa-credit-card"></i>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-bold small text-muted text-uppercase">Card Holder Name *</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-id-card text-emerald-700"></i></span>
+                    <input type="text" id="card-name" class="form-control form-control-agri border-start-0 ps-0" placeholder="Full name as printed on card" value="RAMANATHAN K">
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-bold small text-muted text-uppercase">Card Number (16 Digits) *</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-credit-card text-emerald-700"></i></span>
+                    <input type="text" id="card-number" class="form-control form-control-agri border-start-0 ps-0" placeholder="4532 8912 3456 7890" maxlength="19" oninput="formatCardNumber(this)" value="4532 8912 3456 7890">
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold small text-muted text-uppercase">Expiry Date (MM/YY) *</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-calendar-days text-emerald-700"></i></span>
+                    <input type="text" id="card-expiry" class="form-control form-control-agri border-start-0 ps-0" placeholder="MM/YY" maxlength="5" oninput="formatCardExpiry(this)" value="12/28">
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold small text-muted text-uppercase">CVV / CVC (3 Digits) *</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-lock text-emerald-700"></i></span>
+                    <input type="password" id="card-cvv" class="form-control form-control-agri border-start-0 ps-0" placeholder="•••" maxlength="4" value="892">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. NET BANKING VIEW -->
+            <div id="view-netbanking" class="p-3 bg-white border rounded-3" style="display:none;">
+              <label class="form-label fw-bold small text-muted text-uppercase">Select Your Bank</label>
+              <select id="netbank-select" class="form-select form-control-agri">
+                <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+                <option value="HDFC Bank">HDFC Bank</option>
+                <option value="ICICI Bank">ICICI Bank</option>
+                <option value="Axis Bank">Axis Bank</option>
+                <option value="Canara Bank">Canara Bank</option>
+                <option value="Indian Bank">Indian Bank</option>
+                <option value="Tamilnad Mercantile Bank">Tamilnad Mercantile Bank</option>
+              </select>
+            </div>
+
+            <!-- 4. COD VIEW -->
+            <div id="view-cod" class="p-3 bg-warning-subtle border border-warning rounded-3" style="display:none;">
+              <i class="fa-solid fa-hand-holding-dollar text-warning fs-5 me-2"></i>
+              <span class="fw-bold text-dark">Cash on Delivery Selected:</span>
+              <span class="small text-muted">You can pay cash directly to our tractor delivery agent upon receiving the items at your farmland.</span>
+            </div>
+
+          </div>
+
+          <button type="submit" class="btn btn-gold w-100 py-3 font-heading fw-bold fs-5 shadow-lg mb-5">
+            <i class="fa-solid fa-shield-check me-2"></i> Place Order Now
+          </button>
+        </form>
+      </div>
+
+      <!-- Checkout Right Panel: Order Summary & Item Quantity Modifiers -->
+      <div class="col-lg-4">
+        <div class="glass-card p-4 sticky-top" style="top: 100px;">
+          <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">Order Items (<span id="chk-item-count">0</span>)</h4>
+          
+          <!-- Interactive Item List -->
+          <div id="checkout-items-list" class="mb-4 d-flex flex-column gap-2" style="max-height: 280px; overflow-y: auto;">
+            <!-- Dynamically Populated -->
+          </div>
+
+          <!-- Price Calculations -->
+          <div class="p-3 bg-slate-50 rounded-3 border mb-3">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Items Subtotal</span>
+              <span id="chk-subtotal" class="fw-bold">₹0</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Agriculture GST (5%)</span>
+              <span id="chk-gst" class="fw-bold text-emerald-700">+₹0</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Delivery Charge</span>
+              <span id="chk-delivery" class="fw-bold text-success">FREE</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+              <span class="text-muted">Coupon Savings</span>
+              <span id="chk-discount" class="fw-bold text-danger">-₹0</span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pt-2">
+              <span class="fs-5 font-heading fw-bold">Grand Total</span>
+              <span id="chk-grand-total" class="fs-2 font-heading fw-bold text-emerald-800">₹0</span>
+            </div>
+          </div>
+
+          <div class="text-muted small text-center">
+            <i class="fa-solid fa-shield-halved me-1 text-success"></i> Guarantee 100% genuine inputs & instant door delivery.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    let activePaymentMode = 'UPI';
+
+    function togglePaymentView(mode) {
+      activePaymentMode = mode;
+      document.getElementById('view-upi').style.display = (mode === 'UPI') ? 'block' : 'none';
+      document.getElementById('view-card').style.display = (mode === 'CARD') ? 'block' : 'none';
+      document.getElementById('view-netbanking').style.display = (mode === 'NETBANKING') ? 'block' : 'none';
+      document.getElementById('view-cod').style.display = (mode === 'COD') ? 'block' : 'none';
+    }
+
+    function renderCheckoutSummary() {
+      const container = document.getElementById('checkout-items-list');
+      const countEl = document.getElementById('chk-item-count');
+      if (!container) return;
+
+      const cart = agriApp.cart;
+      if (cart.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+      }
+
+      const totalItemsCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+      if (countEl) countEl.textContent = totalItemsCount;
+
+      container.innerHTML = cart.map(item => `
+        <div class="d-flex align-items-center justify-content-between p-2 bg-white rounded border">
+          <div class="d-flex align-items-center gap-2">
+            <img src="${item.image}" width="42" height="42" class="rounded-2" style="object-fit:cover;">
+            <div>
+              <div class="fw-bold small text-truncate" style="max-width:130px;" title="${item.name}">${item.name}</div>
+              <div class="small text-muted">₹${item.price}</div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-1">
+            <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-circle" onclick="agriApp.updateQuantity('${item.id}', ${item.quantity - 1}); renderCheckoutSummary();">-</button>
+            <span class="fw-bold px-1 small">${item.quantity}</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 rounded-circle" onclick="agriApp.updateQuantity('${item.id}', ${item.quantity + 1}); renderCheckoutSummary();">+</button>
+          </div>
+
+          <div class="fw-bold font-heading text-emerald-800">
+            ₹${item.price * item.quantity}
+          </div>
+        </div>
+      `).join('');
+
+      const subtotal = agriApp.getCartSubtotal();
+      const gst = agriApp.getGSTAmount(subtotal);
+      const delivery = agriApp.getDeliveryCharge(subtotal);
+      const grandTotal = agriApp.getGrandTotal(subtotal);
+
+      document.getElementById('chk-subtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+      document.getElementById('chk-gst').textContent = `+₹${gst.toLocaleString('en-IN')}`;
+      document.getElementById('chk-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
+      document.getElementById('chk-grand-total').textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+    }
+
+    async function handleOrderSubmission(e) {
+      e.preventDefault();
+
+      const custName = document.getElementById('cust-name').value.trim();
+      const custPhone = document.getElementById('cust-phone').value.trim();
+      const custEmail = document.getElementById('cust-email').value.trim();
+      const custAddress = document.getElementById('cust-address').value.trim();
+      const custDistrict = document.getElementById('cust-district').value.trim();
+      const custState = document.getElementById('cust-state').value.trim();
+      const custPin = document.getElementById('cust-pin').value.trim();
+
+      if (!custName || !custPhone || !custEmail || !custAddress || !custDistrict) {
+        agriApp.showToast('Please fill in all mandatory customer & delivery details.', 'danger');
+        return;
+      }
+
+      const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+      const paymentMethodName = selectedRadio ? selectedRadio.value : 'Online Payment';
+      const isCOD = paymentMethodName.includes('COD') || activePaymentMode === 'COD';
+
+      const payload = {
+        customerName: custName,
+        customerPhone: custPhone,
+        customerEmail: custEmail,
+        shippingAddress: {
+          fullName: custName,
+          phone: custPhone,
+          street: custAddress,
+          city: custDistrict,
+          state: custState,
+          zipCode: custPin
+        },
+        items: agriApp.cart.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, image: i.image })),
+        paymentMethod: paymentMethodName,
+        discountAmount: 0
+      };
+
+      const submitBtn = document.querySelector('#checkout-form button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Initializing Secure Order...';
+      }
+
+      // CASH ON DELIVERY FLOW
+      if (isCOD) {
+        try {
+          const res = await fetch('/api/payment/cod', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            // Save order locally for quick view
+            saveLocalOrderRecord({
+              id: data.orderId,
+              txnId: data.transactionId,
+              date: new Date().toISOString().split('T')[0],
+              customerName: custName,
+              customerPhone: custPhone,
+              customerEmail: custEmail,
+              customerAddress: `${custAddress}, ${custDistrict}, ${custState} - ${custPin}`,
+              items: [...agriApp.cart],
+              total: data.amount,
+              paymentMethod: 'Cash on Delivery (COD)',
+              paymentStatus: 'PENDING_COD',
+              orderStatus: 'Confirmed'
+            });
+
+            // Clear Cart
+            agriApp.cart = [];
+            localStorage.setItem('agri_cart', '[]');
+            agriApp.updateCounters();
+
+            agriApp.showToast('COD Order Placed Successfully! Redirecting...', 'success');
+            setTimeout(() => {
+              window.location.href = `payment-success.html?orderId=${data.orderId}&txnId=${data.transactionId}&total=${data.amount}&method=COD`;
+            }, 600);
+          } else {
+            agriApp.showToast(data.message || 'Failed to place COD order.', 'danger');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+            }
+          }
+        } catch (err) {
+          agriApp.showToast('Unable to connect to payment server. Please try again.', 'danger');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+          }
+        }
+        return;
+      }
+
+      // RAZORPAY PAYMENT FLOW (UPI, CREDIT CARD, DEBIT CARD, NET BANKING)
+      try {
+        const orderRes = await fetch('/api/payment/create-razorpay-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const orderData = await orderRes.json();
+
+        if (!orderRes.ok || !orderData.success) {
+          agriApp.showToast(orderData.message || 'Error initializing Razorpay order', 'danger');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+          }
+          return;
+        }
+
+        // Open Razorpay Modal
+        const options = {
+          key: orderData.key || 'rzp_test_SaravanaAgro2026',
+          amount: orderData.amount,
+          currency: orderData.currency || 'INR',
+          name: 'G. Saravana Agro Clinic',
+          description: 'Certified Fertilizers & Farming Essentials',
+          image: 'logo.png',
+          order_id: orderData.razorpayOrderId,
+          prefill: {
+            name: custName,
+            email: custEmail,
+            contact: custPhone
+          },
+          theme: {
+            color: '#0a3622'
+          },
+          handler: async function (rzpResponse) {
+            try {
+              const verifyRes = await fetch('/api/payment/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: rzpResponse.razorpay_order_id,
+                  razorpay_payment_id: rzpResponse.razorpay_payment_id,
+                  razorpay_signature: rzpResponse.razorpay_signature,
+                  customOrderId: orderData.customOrderId,
+                  customerName: custName,
+                  customerPhone: custPhone,
+                  customerEmail: custEmail,
+                  amount: orderData.totalAmount,
+                  paymentMethod: paymentMethodName
+                })
+              });
+
+              const verifyData = await verifyRes.json();
+
+              if (verifyRes.ok && verifyData.success) {
+                saveLocalOrderRecord({
+                  id: verifyData.orderId,
+                  txnId: verifyData.transactionId,
+                  date: new Date().toISOString().split('T')[0],
+                  customerName: custName,
+                  customerPhone: custPhone,
+                  customerEmail: custEmail,
+                  customerAddress: `${custAddress}, ${custDistrict}, ${custState} - ${custPin}`,
+                  items: [...agriApp.cart],
+                  total: verifyData.amount,
+                  paymentMethod: paymentMethodName,
+                  paymentStatus: 'PAID',
+                  orderStatus: 'Confirmed'
+                });
+
+                // Clear Cart
+                agriApp.cart = [];
+                localStorage.setItem('agri_cart', '[]');
+                agriApp.updateCounters();
+
+                agriApp.showToast('Payment Verified & Order Confirmed!', 'success');
+                setTimeout(() => {
+                  window.location.href = `payment-success.html?orderId=${verifyData.orderId}&txnId=${verifyData.transactionId}&total=${verifyData.amount}`;
+                }, 600);
+              } else {
+                agriApp.showToast(verifyData.message || 'Payment Verification Failed', 'danger');
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+                }
+              }
+            } catch (vErr) {
+              agriApp.showToast('Error verifying payment with server.', 'danger');
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+              }
+            }
+          },
+          modal: {
+            ondismiss: function () {
+              agriApp.showToast('Payment process cancelled. Cart items preserved.', 'info');
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+              }
+
+              // Log failure to backend
+              fetch('/api/payment/failed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  customOrderId: orderData.customOrderId,
+                  razorpay_order_id: orderData.razorpayOrderId,
+                  reason: 'User cancelled payment modal',
+                  customerName: custName,
+                  customerPhone: custPhone,
+                  amount: orderData.totalAmount
+                })
+              }).catch(() => {});
+            }
+          }
+        };
+
+        if (typeof Razorpay !== 'undefined') {
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (resp) {
+            const errDesc = resp.error ? (resp.error.description || resp.error.reason) : 'Declined by bank';
+            agriApp.showToast('Payment Failed: ' + errDesc, 'danger');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+            }
+
+            fetch('/api/payment/failed', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                customOrderId: orderData.customOrderId,
+                razorpay_order_id: orderData.razorpayOrderId,
+                reason: errDesc,
+                customerName: custName,
+                customerPhone: custPhone,
+                amount: orderData.totalAmount
+              })
+            }).catch(() => {});
+          });
+          rzp.open();
+        } else {
+          agriApp.showToast('Razorpay Checkout SDK failed to load. Please check internet connection.', 'danger');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+          }
+        }
+
+      } catch (err) {
+        agriApp.showToast('Unable to connect to Razorpay payment server.', 'danger');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-shield-check me-2"></i> Place Order Now';
+        }
+      }
+    }
+
+    function saveLocalOrderRecord(orderObj) {
+      let orders = [];
+      try {
+        orders = JSON.parse(localStorage.getItem('agri_orders') || '[]');
+      } catch(e) {
+        orders = [];
+      }
+      orders.unshift(orderObj);
+      localStorage.setItem('agri_orders', JSON.stringify(orders));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!agriApp.requireAuth()) return;
+
+      const u = agriApp.user;
+      if (u) {
+        if (u.name) document.getElementById('cust-name').value = u.name;
+        if (u.phone) document.getElementById('cust-phone').value = u.phone;
+        if (u.email) document.getElementById('cust-email').value = u.email;
+        if (u.address) document.getElementById('cust-address').value = u.address;
+        if (u.district) document.getElementById('cust-district').value = u.district;
+      }
+
+      renderCheckoutSummary();
+    });
+  </script>
+</body>
+</html>

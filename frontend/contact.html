@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | G. Saravana Agro Clinic</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div><i class="fa-solid fa-headset me-1 text-warning"></i> Customer Support & Agronomy Helpline: +91 63791 20465</div>
+      <button id="lang-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-language me-1"></i> தமிழ் / EN</button>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-agri sticky-top">
+    <div class="container">
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper"><img src="logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic Contact</div>
+        </div>
+      </a>
+      <a href="index.html" class="btn btn-outline-gold rounded-pill px-3 py-2 fw-bold"><i class="fa-solid fa-house me-1"></i> Store Home</a>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <div class="row g-5">
+      
+      <!-- Contact Info -->
+      <div class="col-lg-5">
+        <span class="badge badge-gold px-3 py-2 rounded-pill mb-3">GET IN TOUCH</span>
+        <h2 class="font-heading fw-bold text-emerald-800 display-6 mb-3">We are Here to Help Your Farm Succeed</h2>
+        <p class="text-muted mb-4">Visit our retail store in Cheranmahadevi or reach out to our agronomist support line for fertilizer dosing guidance.</p>
+
+        <div class="d-flex flex-column gap-3 mb-4">
+          <div class="d-flex align-items-center gap-3 p-3 bg-slate-50 rounded-3 border">
+            <div class="brand-icon-wrapper" style="width:40px; height:40px; font-size:1.1rem;"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <div class="fw-bold">Main Store Address</div>
+              <small class="text-muted">Main Canal Bank Road, Cheranmahadevi, Tirunelveli, TN - 627414</small>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 p-3 bg-slate-50 rounded-3 border">
+            <div class="brand-icon-wrapper" style="width:40px; height:40px; font-size:1.1rem;"><i class="fa-solid fa-phone"></i></div>
+            <div>
+              <div class="fw-bold">Helpline & WhatsApp</div>
+              <small class="text-muted">+91 63791 20465 / +91 98421 11223</small>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-3 p-3 bg-slate-50 rounded-3 border">
+            <div class="brand-icon-wrapper" style="width:40px; height:40px; font-size:1.1rem;"><i class="fa-solid fa-envelope"></i></div>
+            <div>
+              <div class="fw-bold">Email Support</div>
+              <small class="text-muted">support@saravanaagro.in</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="col-lg-7">
+        <div class="glass-card p-4 p-md-5">
+          <h4 class="font-heading fw-bold text-emerald-800 mb-4"><i class="fa-solid fa-paper-plane me-2 text-warning"></i>Send Us a Message</h4>
+
+          <form onsubmit="handleContactSubmit(event)">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Your Full Name *</label>
+                <input type="text" id="cnt-name" class="form-control form-control-agri" required placeholder="e.g. Ramanathan">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Mobile Phone Number *</label>
+                <input type="tel" id="cnt-phone" class="form-control form-control-agri phone-input" required placeholder="10 Digit Mobile Number" inputmode="numeric" pattern="[0-9]*" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Subject / Inquiry Type</label>
+                <select id="cnt-subject" class="form-select form-control-agri">
+                  <option value="Fertilizer Dosing Query">Fertilizer Dosing Query</option>
+                  <option value="Bulk Order Inquiry">Bulk Order Inquiry</option>
+                  <option value="Soil Testing Appointment">Soil Testing Appointment</option>
+                  <option value="General Support">General Support</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Your Message</label>
+                <textarea id="cnt-msg" class="form-control form-control-agri" rows="4" required placeholder="Write your question or order inquiry..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100 py-3 font-heading fw-bold">
+              <i class="fa-solid fa-paper-plane me-2"></i> Submit Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    async function handleContactSubmit(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('cnt-name').value.trim();
+      const phone = document.getElementById('cnt-phone').value.trim();
+      const subject = document.getElementById('cnt-subject').value;
+      const message = document.getElementById('cnt-msg').value.trim();
+
+      if (!name || !phone || !message) {
+        agriApp.showToast('Please fill in your name, phone number, and message.', 'danger');
+        return;
+      }
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Submitting Message...';
+      }
+
+      const inquiryObj = {
+        id: 'INQ-' + Math.floor(10000 + Math.random() * 90000),
+        name,
+        phone,
+        email: '',
+        subject,
+        message,
+        status: 'New',
+        date: new Date().toISOString().split('T')[0]
+      };
+
+      // Save locally
+      try {
+        let existing = JSON.parse(localStorage.getItem('agri_inquiries') || '[]');
+        existing.unshift(inquiryObj);
+        localStorage.setItem('agri_inquiries', JSON.stringify(existing));
+      } catch (err) {}
+
+      // POST to backend API /api/inquiries
+      try {
+        await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, subject, message })
+        });
+      } catch (apiErr) {}
+
+      agriApp.showToast('Thank you! Your message has been sent to our Agro Clinic Admin.', 'success');
+      e.target.reset();
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i> Submit Inquiry';
+      }
+    }
+  </script>
+</body>
+</html>

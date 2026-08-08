@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP Dashboard | G. Saravana Agro Clinic Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-brand-icon"><img src="../logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="fw-bold font-heading">Saravana ERP</div>
+          <div class="small text-slate-400" style="font-size:0.7rem;">Cheranmahadevi</div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item active"><i class="fa-solid fa-chart-pie fs-5"></i> <span>Dashboard</span></a>
+        <a href="products.html" class="admin-nav-item"><i class="fa-solid fa-boxes-stacked fs-5"></i> <span>Product Management</span></a>
+        <a href="inventory.html" class="admin-nav-item"><i class="fa-solid fa-warehouse fs-5"></i> <span>Stock Inventory</span></a>
+        <a href="orders.html" class="admin-nav-item"><i class="fa-solid fa-truck-ramp-box fs-5"></i> <span>Live Orders</span></a>
+        <a href="inquiries.html" class="admin-nav-item"><i class="fa-solid fa-comments fs-5"></i> <span>Farmer Messages</span></a>
+        <a href="customers.html" class="admin-nav-item"><i class="fa-solid fa-users fs-5"></i> <span>Farmer Directory</span></a>
+        <a href="offers.html" class="admin-nav-item"><i class="fa-solid fa-tags fs-5"></i> <span>Coupons & Offers</span></a>
+        <a href="transactions.html" class="admin-nav-item"><i class="fa-solid fa-receipt fs-5"></i> <span>Revenue & Payments</span></a>
+        <a href="settings.html" class="admin-nav-item"><i class="fa-solid fa-user-lock fs-5"></i> <span>Account Security</span></a>
+        
+        <div class="mt-auto pt-3 border-top border-secondary">
+          <a href="../index.html" class="admin-nav-item"><i class="fa-solid fa-store fs-5"></i> <span>View Main E-Store</span></a>
+          <button onclick="adminLogout()" class="admin-nav-item border-0 bg-transparent text-danger w-100 text-start"><i class="fa-solid fa-right-from-bracket fs-5"></i> <span>Log Out</span></button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-page-title">Enterprise Resource Planning Dashboard</h1>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-outline-warning text-dark fw-bold" onclick="simulateNewOrder()"><i class="fa-solid fa-plus me-1"></i> Simulate Live Order</button>
+          <span class="badge status-pill success"><i class="fa-solid fa-circle me-1"></i> System Online</span>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        
+        <!-- KPI Stat Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+              <div class="text-muted small fw-bold">Total Revenue</div>
+              <div class="admin-stat-card h3 text-success admin-stat-value" id="admin-stat-revenue">₹4,690</div>
+              <small class="text-success"><i class="fa-solid fa-arrow-trend-up me-1"></i> +18.4% this month</small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon" style="background:#eff6ff; color:#2563eb;"><i class="fa-solid fa-cart-shopping"></i></div>
+              <div class="text-muted small fw-bold">Total Orders</div>
+              <div class="admin-stat-card h3 text-primary admin-stat-value" id="stat-total-orders">2</div>
+              <small class="text-muted">Live customer orders</small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-boxes-stacked"></i></div>
+              <div class="text-muted small fw-bold">Active Products</div>
+              <div class="admin-stat-value" id="admin-stat-products">8</div>
+              <small class="text-muted">Catalog items</small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fa-solid fa-comments"></i></div>
+              <div class="text-muted small fw-bold">Farmer Messages</div>
+              <div class="admin-stat-value text-success" id="admin-stat-inquiries">0</div>
+              <small class="text-success"><a href="inquiries.html" class="text-decoration-none text-success fw-bold">View Support Desk &rarr;</a></small>
+            </div>
+          </div>
+        </div>
+
+          <div class="col-md-3">
+            <div class="admin-stat-card">
+              <div class="admin-stat-icon" style="background:#fce7f3; color:#db2777;"><i class="fa-solid fa-cubes"></i></div>
+              <div class="text-muted small fw-bold">Total Stock Units</div>
+              <div class="admin-stat-value" id="admin-stat-stock">845</div>
+              <small class="text-muted">In warehouse</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="admin-table-container">
+          <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="font-heading fw-bold mb-0"><i class="fa-solid fa-clock-rotate-left me-2 text-warning"></i>Recent Orders Activity</h5>
+            <a href="orders.html" class="btn btn-sm btn-outline-primary fw-bold">View All Orders</a>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Purchased Items</th>
+                <th>Amount</th>
+                <th>Payment Status</th>
+                <th>Order Status</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table">
+              <!-- Rendered via admin.js -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content p-2">
+        <div class="modal-header">
+          <h5 id="modal-order-title" class="modal-title font-heading fw-bold">Order Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div id="modal-order-body" class="modal-body">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

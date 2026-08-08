@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Access & Login | G. Saravana Agro Clinic</title>
+  <meta name="description" content="Secure login portal for farmers and administrators of G. Saravana Agro Clinic.">
+  
+  <!-- Bootstrap 5 CSS & Font Awesome Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Split Screen Auth Wrapper -->
+  <div class="auth-split-wrapper">
+    
+    <!-- Left Banner Side -->
+    <div class="auth-banner-side">
+      <div>
+        <a href="index.html" class="navbar-brand-agri mb-4">
+          <div class="brand-icon-wrapper">
+            <img src="logo.png" alt="G. Saravana Agro Clinic Logo">
+          </div>
+          <div>
+            <div class="brand-title text-white">G. Saravana</div>
+            <div class="brand-subtitle text-gold-gradient">Agro Clinic, Cheranmahadevi</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="my-auto py-5">
+        <span class="badge badge-gold mb-3 px-3 py-2 rounded-pill">
+          <i class="fa-solid fa-shield-halved me-1"></i> #1 Trusted Fertilizer E-Store
+        </span>
+        <h1 class="display-4 font-heading fw-extrabold text-white mb-3">Empowering Farmers with Quality Supplies</h1>
+        <p class="lead text-white-50 mb-4" style="max-width: 520px;">
+          Access certified hybrid seeds, 100% water soluble NPK fertilizers, bio-pesticides, and expert agronomy advisory.
+        </p>
+
+        <div class="row g-3 mt-4">
+          <div class="col-6">
+            <div class="p-3 rounded-4 glass-card" style="background: rgba(255,255,255,0.08);">
+              <h3 class="text-gold-gradient font-heading mb-1">15,000+</h3>
+              <p class="small text-white-50 mb-0">Active Farmers</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 rounded-4 glass-card" style="background: rgba(255,255,255,0.08);">
+              <h3 class="text-gold-gradient font-heading mb-1">100% Genuine</h3>
+              <p class="small text-white-50 mb-0">Certified Inputs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center text-white-50 small">
+        <span>&copy; 2026 G. Saravana Agro Clinic</span>
+        <div class="d-flex gap-3">
+          <a href="index.html" class="text-white-50 hover-text-gold">Home</a>
+          <a href="contact.html" class="text-white-50 hover-text-gold">Support</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Form Side -->
+    <div class="auth-form-side">
+      <div class="auth-card">
+        
+        <!-- Header -->
+        <div class="text-center mb-4">
+          <div class="d-inline-flex p-3 rounded-circle bg-emerald-50 text-emerald-800 mb-3 shadow-sm">
+            <i class="fa-solid fa-user-lock fs-2"></i>
+          </div>
+          <h2 class="font-heading fw-bold mb-1">Account Login</h2>
+          <p class="text-muted small">Select your portal role to access your account</p>
+
+          <!-- Tab Switcher -->
+          <div class="p-1 bg-slate-100 rounded-pill border d-flex gap-1 mt-3">
+            <button id="user-tab-btn" type="button" class="btn btn-sm flex-fill py-2 rounded-pill fw-bold btn-emerald" onclick="switchLoginTab('user')">
+              <i class="fa-solid fa-wheat-awn me-1"></i> Farmer / User
+            </button>
+            <button id="admin-tab-btn" type="button" class="btn btn-sm flex-fill py-2 rounded-pill fw-bold text-muted" onclick="switchLoginTab('admin')">
+              <i class="fa-solid fa-user-gear me-1"></i> Admin Portal
+            </button>
+          </div>
+        </div>
+
+        <!-- USER / FARMER LOGIN FORM -->
+        <div id="user-login-view">
+          <form onsubmit="handleUserLogin(event)">
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-muted text-uppercase">Mobile / Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-envelope text-emerald-700"></i></span>
+                <input type="text" id="login-email" class="form-control form-control-agri border-start-0 ps-0" required placeholder="farmer@agro.com or 9876543210" value="">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-muted text-uppercase">Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-lock text-emerald-700"></i></span>
+                <input type="password" id="login-password" class="form-control form-control-agri border-start-0 ps-0" required placeholder="••••••••" value="">
+                <button type="button" class="btn btn-outline-secondary border-start-0 border-top border-bottom border-end" onclick="togglePassword('login-password', 'user-pass-icon')">
+                  <i id="user-pass-icon" class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                <label class="form-check-label small text-muted" for="rememberMe">Remember me</label>
+              </div>
+              <a href="#" data-bs-toggle="modal" data-bs-target="#forgotModal" class="small text-emerald-700 fw-bold">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100 py-3 fs-6 fw-bold shadow-sm mb-3">
+              <i class="fa-solid fa-right-to-bracket me-2"></i> Login to Store
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <span class="text-muted small">New to Saravana Agro Clinic? </span>
+            <a href="register.html" class="text-emerald-700 fw-bold small">Create Farmer Account</a>
+          </div>
+        </div>
+
+        <!-- ADMIN LOGIN FORM -->
+        <div id="admin-login-view" style="display: none;">
+          <div class="alert alert-warning py-2 px-3 small rounded-3 mb-3">
+            <i class="fa-solid fa-triangle-exclamation me-1"></i> Authorized ERP Admin Portal Access Only.
+          </div>
+
+          <form onsubmit="handleAdminLogin(event)">
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-muted text-uppercase">Admin Username / ID *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-user-shield text-warning"></i></span>
+                <input type="text" id="admin-username-input" class="form-control form-control-agri border-start-0 ps-0" required placeholder="Enter Admin Username" autocomplete="username">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-muted text-uppercase">Admin Password *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-key text-warning"></i></span>
+                <input type="password" id="admin-password-input" class="form-control form-control-agri border-start-0 ps-0" required placeholder="Enter Secret Password" autocomplete="current-password">
+                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('admin-password-input', 'admin-pass-icon')">
+                  <i id="admin-pass-icon" class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="admin-submit-btn" class="btn btn-emerald w-100 py-3 fs-6 fw-bold shadow-sm mb-3">
+              <i class="fa-solid fa-shield-halved me-2"></i> Enter Admin ERP Dashboard
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal fade" id="forgotModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content glass-card p-2">
+        <div class="modal-header border-0">
+          <h5 class="modal-title font-heading fw-bold"><i class="fa-solid fa-key me-2 text-warning"></i>Reset Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">Enter your registered Mobile Number or Email to receive a 6-digit OTP reset code.</p>
+          <div class="mb-3">
+            <input type="text" class="form-control form-control-agri" placeholder="Enter Mobile Number or Email">
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary rounded-pill btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold rounded-pill btn-sm" onclick="if(agriApp) agriApp.showToast('OTP code sent successfully!'); modal.hide();">Send OTP Code</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    function switchLoginTab(tab) {
+      const userTab = document.getElementById('user-tab-btn');
+      const adminTab = document.getElementById('admin-tab-btn');
+      const userView = document.getElementById('user-login-view');
+      const adminView = document.getElementById('admin-login-view');
+
+      if (tab === 'user') {
+        userTab.className = 'btn btn-sm flex-fill py-2 rounded-pill fw-bold btn-emerald';
+        adminTab.className = 'btn btn-sm flex-fill py-2 rounded-pill fw-bold text-muted';
+        userView.style.display = 'block';
+        adminView.style.display = 'none';
+      } else {
+        adminTab.className = 'btn btn-sm flex-fill py-2 rounded-pill fw-bold btn-emerald';
+        userTab.className = 'btn btn-sm flex-fill py-2 rounded-pill fw-bold text-muted';
+        adminView.style.display = 'block';
+        userView.style.display = 'none';
+      }
+    }
+
+    function handleUserLogin(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('login-email').value.trim();
+      
+      let nameStr = 'Farmer';
+      if (emailInput.includes('@')) {
+        const parts = emailInput.split('@')[0];
+        nameStr = parts.charAt(0).toUpperCase() + parts.slice(1);
+      } else if (emailInput.length > 0) {
+        nameStr = 'Farmer (' + emailInput.slice(-4) + ')';
+      }
+
+      const userObj = {
+        name: nameStr,
+        email: emailInput.includes('@') ? emailInput : `${emailInput}@agro.com`,
+        phone: emailInput.includes('@') ? '' : emailInput,
+        district: 'Cheranmahadevi',
+        role: 'farmer'
+      };
+
+      localStorage.setItem('agri_user', JSON.stringify(userObj));
+      localStorage.setItem('agri_token', 'jwt_mock_token_' + Date.now());
+      agriApp.user = userObj;
+
+      agriApp.showToast(`Welcome back, ${nameStr}!`, 'success');
+      setTimeout(() => {
+        window.location.href = 'profile.html';
+      }, 800);
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('admin-username-input');
+      const passwordInput = document.getElementById('admin-password-input');
+      const submitBtn = document.getElementById('admin-submit-btn');
+
+      const username = usernameInput ? usernameInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      if (!username || !password) {
+        agriApp.showToast('Invalid admin credentials.', 'danger');
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Authenticating...';
+      }
+
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success && data.token) {
+          localStorage.setItem('agri_admin_token', data.token);
+          localStorage.setItem('agri_admin_authenticated', 'true');
+          localStorage.setItem('agri_admin_user', data.username);
+          agriApp.showToast('Admin authentication successful! Redirecting...', 'success');
+          setTimeout(() => {
+            window.location.href = 'admin/dashboard.html';
+          }, 800);
+        } else {
+          agriApp.showToast(data.message || 'Invalid admin credentials.', 'danger');
+        }
+      } catch (err) {
+        agriApp.showToast('Unable to connect to backend server.', 'danger');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-shield-halved me-2"></i> Enter Admin ERP Dashboard';
+        }
+      }
+    }
+
+    // Check query string for default tab
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tab') === 'admin') {
+      switchLoginTab('admin');
+    }
+  </script>
+</body>
+</html>

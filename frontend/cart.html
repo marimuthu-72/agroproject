@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | G. Saravana Agro Clinic</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div><i class="fa-solid fa-truck-fast me-1 text-warning"></i> Express Tractor Farm Delivery Available</div>
+      <div class="d-flex align-items-center gap-2">
+        <button id="lang-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-language me-1"></i> தமிழ் / EN</button>
+        <button id="dark-mode-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-moon me-1"></i> Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-agri sticky-top">
+    <div class="container">
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper"><img src="logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic, Cheranmahadevi</div>
+        </div>
+      </a>
+
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <a href="products.html" class="btn btn-outline-gold rounded-pill px-3 py-2 fw-bold">
+          <i class="fa-solid fa-arrow-left me-1"></i> Continue Shopping
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <h2 class="font-heading fw-bold text-emerald-800 mb-4"><i class="fa-solid fa-cart-shopping me-2 text-warning"></i>Your Agricultural Shopping Cart</h2>
+
+    <div class="row g-4">
+      <!-- Cart Items List -->
+      <div class="col-lg-8">
+        <div id="cart-items-container" class="d-flex flex-column gap-3">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="col-lg-4">
+        <div class="glass-card p-4 sticky-top" style="top: 100px;">
+          <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">Order Summary</h4>
+
+          <!-- Coupon Code Box -->
+          <div class="mb-4">
+            <label class="form-label fw-bold small text-muted text-uppercase">Promo / Coupon Code</label>
+            <div class="input-group">
+              <input type="text" id="coupon-input" class="form-control form-control-agri" placeholder="Try KISAAN15" value="KISAAN15">
+              <button type="button" class="btn btn-gold fw-bold" onclick="applyCoupon()">Apply</button>
+            </div>
+            <small id="coupon-msg" class="text-success fw-bold mt-1 d-block" style="font-size:0.8rem;"></small>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal</span>
+            <span id="summary-subtotal" class="fw-bold">₹0</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Agriculture GST (5%)</span>
+            <span id="summary-gst" class="fw-bold text-emerald-700">+₹0</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Coupon Discount</span>
+            <span id="summary-discount" class="fw-bold text-danger">-₹0</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+            <span class="text-muted">Delivery Charge</span>
+            <span id="summary-delivery" class="fw-bold text-success">FREE</span>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <span class="fs-5 font-heading fw-bold">Grand Total</span>
+            <span id="summary-total" class="fs-2 font-heading fw-bold text-emerald-800">₹0</span>
+          </div>
+
+          <a href="checkout.html" id="checkout-btn" class="btn btn-gold w-100 py-3 font-heading fw-bold fs-6 shadow-sm">
+            <i class="fa-solid fa-credit-card me-2"></i> Proceed to Checkout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    let appliedCoupon = null;
+
+    function applyCoupon() {
+      const input = document.getElementById('coupon-input').value.trim().toUpperCase();
+      const msg = document.getElementById('coupon-msg');
+
+      let coupons = [];
+      try {
+        const stored = localStorage.getItem('agri_coupons');
+        if (stored) coupons = JSON.parse(stored);
+      } catch(e) {}
+
+      if (!coupons || coupons.length === 0) {
+        coupons = [
+          { code: 'KISAAN15', type: 'percentage', value: 15, minOrder: 0, status: 'Active' },
+          { code: 'FREEDEL', type: 'free_shipping', value: 0, minOrder: 1000, status: 'Active' },
+          { code: 'SPRAYER500', type: 'fixed', value: 500, minOrder: 2000, status: 'Active' }
+        ];
+      }
+
+      const coupon = coupons.find(c => c.code === input && c.status === 'Active');
+
+      if (!coupon) {
+        appliedCoupon = null;
+        if (msg) {
+          msg.className = 'text-danger fw-bold mt-1 d-block';
+          msg.textContent = 'Invalid or inactive coupon code.';
+        }
+        if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+          agriApp.showToast('Invalid or inactive coupon code', 'danger');
+        }
+      } else {
+        appliedCoupon = coupon;
+        if (msg) {
+          msg.className = 'text-success fw-bold mt-1 d-block';
+          let descText = coupon.type === 'percentage' ? `${coupon.value}% OFF` : (coupon.type === 'fixed' ? `₹${coupon.value} OFF` : 'Free Delivery');
+          msg.textContent = `✓ Coupon ${coupon.code} applied! (${descText})`;
+        }
+        if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+          agriApp.showToast(`Coupon ${coupon.code} Applied Successfully!`, 'success');
+        }
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-container');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (!container) return;
+
+      const cart = agriApp.cart;
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="glass-card p-5 text-center">
+            <i class="fa-solid fa-cart-arrow-down display-1 text-muted mb-3"></i>
+            <h4 class="font-heading fw-bold text-muted">Your Shopping Cart is Empty</h4>
+            <p class="text-muted small">Explore our catalog to add fertilizers, seeds, and equipment.</p>
+            <a href="products.html" class="btn btn-gold font-heading fw-bold rounded-pill px-4 py-2 mt-2">Explore Catalog</a>
+          </div>
+        `;
+        if (checkoutBtn) checkoutBtn.classList.add('disabled');
+        updateSummary(0);
+        return;
+      }
+
+      if (checkoutBtn) checkoutBtn.classList.remove('disabled');
+
+      const isTamil = agriApp.lang === 'ta';
+      const defaultImg = 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80';
+
+      container.innerHTML = cart.map(item => {
+        const name = isTamil ? (item.nameTa || item.name) : item.name;
+        const categoryName = typeof t === 'function' ? t(item.category) : item.category;
+        const itemTotal = (item.price || 0) * (item.quantity || 1);
+
+        return `
+          <div class="glass-card p-3 p-md-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 shadow-sm border rounded-4">
+            <div class="d-flex align-items-center gap-3 w-100" style="max-width: 400px;">
+              <img src="${item.image || defaultImg}" alt="${name}" onerror="this.onerror=null; this.src='${defaultImg}';" style="width:80px; height:80px; object-fit:cover;" class="rounded-3 border shadow-sm">
+              <div>
+                <span class="badge badge-gold mb-1" style="font-size:0.7rem;">${categoryName}</span>
+                <h6 class="font-heading fw-bold mb-1 text-slate-800 text-truncate" style="max-width: 260px;" title="${name}">${name}</h6>
+                <div class="fw-bold text-emerald-800 fs-6">₹${(item.price || 0).toLocaleString('en-IN')} <small class="text-muted font-normal" style="font-size:0.75rem;">/ unit</small></div>
+              </div>
+            </div>
+            
+            <div class="d-flex align-items-center justify-content-between w-100 w-md-auto gap-4">
+              <div class="d-flex align-items-center gap-2 bg-slate-50 p-1 px-2 rounded-pill border">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle px-2 py-0 fw-bold" onclick="agriApp.updateQuantity('${item.id}', ${item.quantity - 1}); renderCart();" title="Decrease">-</button>
+                <span class="fw-bold px-2 fs-6 min-w-30 text-center">${item.quantity}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle px-2 py-0 fw-bold" onclick="agriApp.updateQuantity('${item.id}', ${item.quantity + 1}); renderCart();" title="Increase">+</button>
+              </div>
+
+              <div class="fw-bold fs-5 font-heading text-emerald-800 text-end min-w-100">
+                ₹${itemTotal.toLocaleString('en-IN')}
+              </div>
+
+              <button type="button" class="btn btn-sm btn-outline-danger border-0 rounded-circle p-2" onclick="agriApp.removeFromCart('${item.id}'); renderCart();" title="Remove item">
+                <i class="fa-solid fa-trash-can fs-5"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const subtotal = agriApp.getCartSubtotal();
+      updateSummary(subtotal);
+    }
+
+    function updateSummary(subtotal) {
+      let discount = 0;
+      const msg = document.getElementById('coupon-msg');
+
+      if (appliedCoupon) {
+        if (appliedCoupon.minOrder > 0 && subtotal < appliedCoupon.minOrder) {
+          if (msg) {
+            msg.className = 'text-warning fw-bold mt-1 d-block';
+            msg.textContent = `Coupon ${appliedCoupon.code} requires min order ₹${appliedCoupon.minOrder}`;
+          }
+        } else {
+          if (appliedCoupon.type === 'percentage') {
+            discount = Math.round((subtotal * appliedCoupon.value) / 100);
+          } else if (appliedCoupon.type === 'fixed') {
+            discount = Math.min(subtotal, appliedCoupon.value);
+          } else if (appliedCoupon.type === 'free_shipping') {
+            discount = 0;
+          }
+        }
+      }
+
+      const gst = agriApp.getGSTAmount(subtotal);
+      const isFreeDelivery = (subtotal >= 1000 || subtotal === 0 || (appliedCoupon && appliedCoupon.type === 'free_shipping'));
+      const delivery = isFreeDelivery ? 0 : 50;
+      const grandTotal = Math.max(0, subtotal + gst + delivery - discount);
+
+      const subEl = document.getElementById('summary-subtotal');
+      const gstEl = document.getElementById('summary-gst');
+      const discEl = document.getElementById('summary-discount');
+      const delEl = document.getElementById('summary-delivery');
+      const totEl = document.getElementById('summary-total');
+
+      if (subEl) subEl.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+      if (gstEl) gstEl.textContent = `+₹${gst.toLocaleString('en-IN')}`;
+      if (discEl) discEl.textContent = `-₹${discount.toLocaleString('en-IN')}`;
+      if (delEl) delEl.textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
+      if (totEl) totEl.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+
+      agriApp.appliedDiscount = discount;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCart();
+    });
+  </script>
+</body>
+</html>

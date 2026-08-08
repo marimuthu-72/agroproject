@@ -1,0 +1,16 @@
+{
+  "appId": "com.agrifertilizer.app",
+  "appName": "G. Saravana Agro Clinic",
+  "webDir": "frontend",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#2e7d32",
+      "showSpinner": false
+    }
+  }
+}

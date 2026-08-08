@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Catalog | G. Saravana Agro Clinic</title>
+  <meta name="description" content="Shop NPK fertilizers, organic vermicompost, bio fertilizers, seeds, and pesticides. Filter by price, category, and availability.">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar-agri">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div data-i18n="top_helpline"><i class="fa-solid fa-location-dot me-1 text-warning"></i> Cheranmahadevi, Tirunelveli | WhatsApp: +91 63791 20465</div>
+      <div class="d-flex align-items-center gap-2">
+        <button id="lang-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-language me-1"></i> தமிழ் / EN</button>
+        <button id="dark-mode-toggle" class="btn top-bar-btn btn-outline-light"><i class="fa-solid fa-moon me-1"></i> Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-agri sticky-top">
+    <div class="container">
+      <a class="navbar-brand-agri" href="index.html">
+        <div class="brand-icon-wrapper"><img src="logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="brand-title">G. Saravana</div>
+          <div class="brand-subtitle">Agro Clinic, Cheranmahadevi</div>
+        </div>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+        <i class="fa-solid fa-bars fs-4"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navContent">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="index.html" data-i18n="nav_home">Home</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri active" href="products.html" data-i18n="nav_products">Products</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="services.html" data-i18n="nav_services">Services</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="offers.html" data-i18n="nav_offers">Offers</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="about.html" data-i18n="nav_about">About</a></li>
+          <li class="nav-item"><a class="nav-link nav-link-agri" href="contact.html" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="wishlist.html" class="action-icon-btn" title="Wishlist">
+            <i class="fa-solid fa-heart"></i>
+            <span id="wishlist-count-badge" class="action-badge" style="display:none;">0</span>
+          </a>
+          <a href="cart.html" class="btn btn-gold rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2">
+            <i class="fa-solid fa-cart-shopping"></i> <span data-i18n="nav_cart">Cart</span>
+            <span id="cart-count-badge" class="badge bg-dark text-white rounded-pill">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Banner -->
+  <div class="bg-slate-900 text-white py-4 mb-4">
+    <div class="container">
+      <h1 class="font-heading fw-bold text-gold-gradient mb-1">Agriculture Products Catalog</h1>
+      <p class="text-white-50 mb-0">Browse certified fertilizers, organic vermicompost, seeds & farming tools</p>
+    </div>
+  </div>
+
+  <!-- Catalog Section -->
+  <div class="container py-3 mb-5">
+    <div class="row g-4">
+      
+      <!-- Sidebar Filters -->
+      <div class="col-lg-3">
+        <div class="glass-card p-4 sticky-top" style="top: 100px;">
+          <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+            <h5 class="font-heading fw-bold mb-0"><i class="fa-solid fa-sliders me-2 text-warning"></i>Filters</h5>
+            <button class="btn btn-sm text-emerald-700 fw-bold p-0" onclick="resetFilters()">Reset All</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="mb-4">
+            <label class="form-label fw-bold small text-muted text-uppercase">Search</label>
+            <div class="input-group">
+              <span class="input-group-text bg-slate-50 border-end-0"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input type="text" id="catalog-search" class="form-control form-control-agri border-start-0 ps-0" placeholder="Filter items..." oninput="renderProducts()">
+            </div>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="mb-4">
+            <label class="form-label fw-bold small text-muted text-uppercase">Category</label>
+            <select id="category-filter" class="form-select form-control-agri" onchange="renderProducts()">
+              <option value="ALL">All Categories</option>
+              <option value="Fertilizers">Fertilizers</option>
+              <option value="Organic Fertilizers">Organic Fertilizers</option>
+              <option value="Bio Fertilizers">Bio Fertilizers</option>
+              <option value="Seeds">Seeds</option>
+              <option value="Pesticides">Pesticides</option>
+              <option value="Plant Growth Promoters">Plant Growth Promoters</option>
+              <option value="Farming Equipment">Farming Equipment</option>
+            </select>
+          </div>
+
+          <!-- Price Range Slider -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between">
+              <label class="form-label fw-bold small text-muted text-uppercase">Max Price</label>
+              <span id="price-range-val" class="fw-bold text-emerald-800">₹3,500</span>
+            </div>
+            <input type="range" id="price-range" class="form-range" min="100" max="3500" step="50" value="3500" oninput="document.getElementById('price-range-val').textContent = '₹' + this.value; renderProducts();">
+          </div>
+
+          <!-- Sort Selector -->
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-muted text-uppercase">Sort By</label>
+            <select id="sort-select" class="form-select form-control-agri" onchange="renderProducts()">
+              <option value="featured">Featured / Popular</option>
+              <option value="low-high">Price: Low to High</option>
+              <option value="high-low">Price: High to Low</option>
+              <option value="rating">Best Rating</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Main Products Grid -->
+      <div class="col-lg-9">
+        
+        <!-- Header Bar -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span id="product-count-label" class="fw-bold text-muted">Showing 8 Products</span>
+          <div class="btn-group">
+            <button class="btn btn-outline-secondary active btn-sm" onclick="setViewMode('grid')"><i class="fa-solid fa-grid-2"></i> Grid</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="setViewMode('list')"><i class="fa-solid fa-list"></i> List</button>
+          </div>
+        </div>
+
+        <div id="catalog-products-grid" class="row g-4">
+          <!-- Dynamically populated -->
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Quick View Product Modal -->
+  <div class="modal fade" id="quickViewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content glass-card p-2">
+        <div class="modal-header border-0">
+          <h5 id="qv-title" class="modal-title font-heading fw-bold">Product Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-4 align-items-center">
+            <div class="col-md-6 text-center">
+              <img id="qv-img" src="" alt="Product" class="img-fluid rounded-4 shadow" style="max-height:280px; object-fit:contain;">
+            </div>
+            <div class="col-md-6">
+              <span id="qv-category" class="product-category">Category</span>
+              <div class="d-flex align-items-center gap-2 my-2">
+                <span id="qv-price" class="fs-2 fw-bold text-emerald-800 font-heading">₹0</span>
+                <span id="qv-original" class="text-muted text-decoration-line-through fs-6"></span>
+              </div>
+              <p id="qv-desc" class="text-muted small mb-4">Description text...</p>
+              
+              <div class="d-flex gap-2">
+                <button id="qv-buy-btn" class="btn btn-gold flex-fill py-3 font-heading fw-bold">
+                  <i class="fa-solid fa-bolt me-2"></i> Buy Now
+                </button>
+                <button id="qv-add-btn" class="btn btn-emerald flex-fill py-3 font-heading fw-bold">
+                  <i class="fa-solid fa-cart-shopping me-2"></i> Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-agri">
+    <div class="container text-center text-slate-400 small">
+      &copy; 2026 G. Saravana Agro Clinic. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lang.js"></script>
+  <script>
+    let viewMode = 'grid';
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      renderProducts();
+    }
+
+    function resetFilters() {
+      document.getElementById('catalog-search').value = '';
+      document.getElementById('category-filter').value = 'ALL';
+      document.getElementById('price-range').value = 3500;
+      document.getElementById('price-range-val').textContent = '₹3,500';
+      document.getElementById('sort-select').value = 'featured';
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('catalog-products-grid');
+      if (!grid) return;
+
+      let products = agriApp.getProducts();
+      const searchTxt = (document.getElementById('catalog-search')?.value || '').toLowerCase();
+      const categoryVal = document.getElementById('category-filter')?.value || 'ALL';
+      const maxPrice = Number(document.getElementById('price-range')?.value || 3500);
+      const sortVal = document.getElementById('sort-select')?.value || 'featured';
+
+      // Filters
+      if (searchTxt) {
+        products = products.filter(p => p.name.toLowerCase().includes(searchTxt) || (p.description && p.description.toLowerCase().includes(searchTxt)));
+      }
+      if (categoryVal !== 'ALL') {
+        products = products.filter(p => p.category === categoryVal);
+      }
+      products = products.filter(p => p.price <= maxPrice);
+
+      // Sorting
+      if (sortVal === 'low-high') products.sort((a, b) => a.price - b.price);
+      if (sortVal === 'high-low') products.sort((a, b) => b.price - a.price);
+      if (sortVal === 'rating') products.sort((a, b) => b.rating - a.rating);
+
+      const countLabel = document.getElementById('product-count-label');
+      if (countLabel) countLabel.textContent = `Showing ${products.length} Products`;
+
+      if (products.length === 0) {
+        grid.innerHTML = `<div class="col-12 text-center py-5 text-muted"><h5>No agricultural products match your filter criteria.</h5><button class="btn btn-gold btn-sm rounded-pill mt-2" onclick="resetFilters()">Clear Filters</button></div>`;
+        return;
+      }
+
+      const currentLang = getCurrentLanguage();
+      const isTamil = currentLang === 'ta';
+
+      grid.innerHTML = products.map(p => {
+        const name = isTamil ? (p.nameTa || p.name) : p.name;
+        const desc = isTamil ? (p.descriptionTa || p.description) : p.description;
+        const categoryName = t(p.category);
+        const buyText = t('Buy Now');
+        const addCartText = t('Add to Cart');
+        const discountPercent = p.originalPrice ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
+        const isWish = agriApp.wishlist.includes(p.id);
+
+        if (viewMode === 'list') {
+          return `
+            <div class="col-12">
+              <div class="glass-card p-3 d-flex flex-column flex-md-row align-items-center gap-4">
+                <img src="${p.image}" alt="${name}" style="width:140px; height:140px; object-fit:contain;" class="rounded-3" onclick="agriApp.openQuickView('${p.id}')">
+                <div class="flex-grow-1">
+                  <span class="product-category">${categoryName}</span>
+                  <h5 class="font-heading fw-bold mb-1" onclick="agriApp.openQuickView('${p.id}')">${name}</h5>
+                  <p class="text-muted small mb-2">${desc}</p>
+                  <div class="d-flex align-items-center gap-3">
+                    <span class="fs-4 fw-bold text-emerald-800 font-heading">₹${p.price}</span>
+                    ${p.originalPrice ? `<span class="text-muted text-decoration-line-through">₹${p.originalPrice}</span>` : ''}
+                  </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                  <button class="btn btn-gold rounded-pill px-4 py-2 font-heading fw-bold" onclick="agriApp.buyNow('${p.id}')">
+                    <i class="fa-solid fa-bolt me-1"></i> ${buyText}
+                  </button>
+                  <button class="btn btn-outline-success rounded-pill px-4 py-2 font-heading fw-bold" onclick="agriApp.addToCart('${p.id}')">
+                    <i class="fa-solid fa-cart-shopping me-1"></i> ${addCartText}
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="product-card">
+              <div class="product-img-wrapper">
+                ${discountPercent > 0 ? `<span class="product-badge-discount">-${discountPercent}% OFF</span>` : ''}
+                <img src="${p.image}" alt="${name}" class="product-img" onclick="agriApp.openQuickView('${p.id}')">
+                <button class="wishlist-btn ${isWish ? 'active' : ''}" onclick="agriApp.toggleWishlist('${p.id}'); renderProducts();">
+                  <i class="fa-${isWish ? 'solid' : 'regular'} fa-heart"></i>
+                </button>
+              </div>
+              <div class="product-info">
+                <span class="product-category">${categoryName}</span>
+                <h6 class="product-title" onclick="agriApp.openQuickView('${p.id}')">${name}</h6>
+                <div class="product-rating">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star-half-stroke"></i>
+                  <span class="text-muted ms-1">(${p.rating})</span>
+                </div>
+                <div class="product-price-row">
+                  <div>
+                    <span class="product-price">₹${p.price}</span>
+                    ${p.originalPrice ? `<span class="product-original-price">₹${p.originalPrice}</span>` : ''}
+                  </div>
+                  <div class="d-flex gap-1">
+                    <button class="add-cart-btn" onclick="agriApp.addToCart('${p.id}')" title="${addCartText}">
+                      <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                    <button class="btn btn-gold btn-sm rounded-pill fw-bold font-heading px-2" onclick="agriApp.buyNow('${p.id}')">
+                      ${buyText}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialCat = urlParams.get('cat');
+    const initialSearch = urlParams.get('search');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (initialCat) {
+        const select = document.getElementById('category-filter');
+        if (select) select.value = initialCat;
+      }
+      if (initialSearch) {
+        const input = document.getElementById('catalog-search');
+        if (input) input.value = initialSearch;
+      }
+      renderProducts();
+    });
+  </script>
+</body>
+</html>
