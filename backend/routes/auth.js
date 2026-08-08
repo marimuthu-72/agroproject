@@ -13,20 +13,50 @@ const generateToken = (id) => {
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
-    const userExists = await User.findOne({ email });
-
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+    const { name, email, password, phone, city, district } = req.body;
+    
+    // Auto-generate clean email for phone-based mobile registrations
+    const cleanPhone = (phone || '').replace(/[^0-9]/g, '');
+    let cleanEmail = (email || '').trim().toLowerCase();
+    if (!cleanEmail) {
+      cleanEmail = cleanPhone ? `${cleanPhone}@farm.in` : `farmer_${Date.now()}@farm.in`;
     }
 
-    const user = await User.create({ name, email, password, phone });
+    // Check if user exists by email or phone
+    const allUsers = await User.find();
+    const userExists = allUsers.find(u => 
+      (u.email && u.email.toLowerCase() === cleanEmail) ||
+      (cleanPhone && u.phone && u.phone.replace(/[^0-9]/g, '') === cleanPhone)
+    );
+
+    if (userExists) {
+      return res.status(200).json({
+        _id: userExists._id || userExists.id,
+        name: userExists.name,
+        email: userExists.email,
+        phone: userExists.phone,
+        role: userExists.role || 'user',
+        token: generateToken(userExists._id || userExists.id),
+        message: 'Mobile user logged in successfully'
+      });
+    }
+
+    const user = await User.create({
+      name: name || (cleanPhone ? `Farmer (${cleanPhone.slice(-4)})` : 'Valued Farmer'),
+      email: cleanEmail,
+      password: password || '123456',
+      phone: cleanPhone || phone || '',
+      city: city || district || 'Cheranmahadevi',
+      role: 'user'
+    });
+
     res.status(201).json({
-      _id: user._id,
+      _id: user._id || user.id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
       role: user.role,
-      token: generateToken(user._id)
+      token: generateToken(user._id || user.id)
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

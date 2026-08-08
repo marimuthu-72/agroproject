@@ -132,11 +132,11 @@ const User = {
   async find(filter = {}) {
     const pool = getPool();
     try {
-      let sql = 'SELECT id AS _id, id, name, email, phone, role, street, city, state, zip_code, created_at FROM users';
+      let sql = 'SELECT id AS _id, id, name, email, phone, role, street, city, state, zip_code, created_at FROM users WHERE 1=1';
       const params = [];
 
       if (filter.role) {
-        sql += ' WHERE role = ?';
+        sql += ' AND (role = ? OR role = "farmer" OR role = "user")';
         params.push(filter.role);
       }
 
@@ -149,7 +149,7 @@ const User = {
     } catch (e) {}
 
     let res = [...memoryUsers];
-    if (filter.role) res = res.filter(u => u.role === filter.role);
+    if (filter.role) res = res.filter(u => u.role !== 'admin');
     return res.map(mapRowToUser);
   }
 };
