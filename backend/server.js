@@ -29,6 +29,10 @@ app.use('/api/loans', require('./routes/loans'));
 // Serve Frontend Static Files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
 // Fallback API message route
 app.get('/api', (req, res) => {
   res.json({ message: 'G. Saravana Agro Clinic MySQL API Server is running smoothly' });
