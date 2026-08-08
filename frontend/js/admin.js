@@ -687,34 +687,90 @@ function simulateNewOrder() {
   renderAdminOrders();
 }
 
-function renderAdminCustomers() {
+async function renderAdminCustomers() {
   const tableBody = document.getElementById('admin-customers-table');
   if (!tableBody) return;
 
-  const defaultCustomers = [
-    { name: 'Ramanathan K.', email: 'ramanathan@farm.in', phone: '+91 98421 11223', location: 'Thanjavur, TN' },
-    { name: 'Murugan P.', email: 'murugan@agri.com', phone: '+91 97890 54321', location: 'Coimbatore, TN' },
-    { name: 'Selvi V.', email: 'selvi.v@greenfield.org', phone: '+91 94432 99881', location: 'Madurai, TN' }
-  ];
+  let customers = [];
 
-  let storedCustomers = [];
+  // 1. Fetch from Backend API /api/admin/customers
   try {
-    storedCustomers = JSON.parse(localStorage.getItem('agri_customers') || '[]');
-  } catch(e) {
-    storedCustomers = [];
+    const res = await fetch('/api/admin/customers');
+    if (res.ok) {
+      const apiUsers = await res.json();
+      if (Array.isArray(apiUsers) && apiUsers.length > 0) {
+        customers = apiUsers.map(u => ({
+          name: u.name,
+          email: u.email,
+          phone: u.phone || u.phoneNumber || '',
+          location: typeof u.address === 'object' ? `${u.address.city || u.address.street || 'Cheranmahadevi'}` : (u.city || u.district || u.location || 'Cheranmahadevi'),
+          lastActive: u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-IN') : 'Active'
+        }));
+      }
+    }
+  } catch (e) {}
+
+  // 2. Fetch from Local Storage 'agri_customers' and 'agri_user'
+  try {
+    const localCustomers = JSON.parse(localStorage.getItem('agri_customers') || '[]');
+    localCustomers.forEach(lc => {
+      if (lc && (lc.email || lc.phone)) {
+        const exists = customers.some(c => (c.email && c.email.toLowerCase() === (lc.email || '').toLowerCase()) || (c.phone && c.phone === lc.phone));
+        if (!exists) {
+          customers.push({
+            name: lc.name || 'Registered Farmer',
+            email: lc.email || 'N/A',
+            phone: lc.phone || 'N/A',
+            location: lc.district || lc.location || lc.city || 'Cheranmahadevi',
+            lastActive: lc.lastActive || 'Logged In'
+          });
+        }
+      }
+    });
+
+    const activeUser = JSON.parse(localStorage.getItem('agri_user') || 'null');
+    if (activeUser && (activeUser.email || activeUser.phone)) {
+      const exists = customers.some(c => (c.email && c.email.toLowerCase() === (activeUser.email || '').toLowerCase()) || (c.phone && c.phone === activeUser.phone));
+      if (!exists) {
+        customers.unshift({
+          name: activeUser.name || 'Active Farmer',
+          email: activeUser.email || 'N/A',
+          phone: activeUser.phone || 'N/A',
+          location: activeUser.district || activeUser.location || 'Cheranmahadevi',
+          lastActive: 'Online Now'
+        });
+      }
+    }
+  } catch (e) {}
+
+  // 3. Fallback defaults if empty
+  if (customers.length === 0) {
+    customers = [
+      { name: 'surya', email: 'suryahere2005@gmail.com', phone: '7643656544', location: 'Chennai', lastActive: 'Online Now' },
+      { name: 'Ramanathan Farmer', email: 'dfshs@gmail.com', phone: '12345678790', location: 'Cheranmahadevi', lastActive: 'Active' },
+      { name: 'dummy', email: 'dummy01@gmail.com', phone: '9876543210', location: 'Tirunelveli', lastActive: 'Active' }
+    ];
   }
 
-  const customers = storedCustomers.length > 0 ? storedCustomers : defaultCustomers;
+  // Update total count badge if element exists
+  const totalCountEl = document.getElementById('stat-total-farmers');
+  if (totalCountEl) totalCountEl.textContent = customers.length;
 
-  tableBody.innerHTML = customers.map((c, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td class="fw-bold text-success">${c.name || 'Anonymous Farmer'}</td>
-      <td>${c.email || 'N/A'}</td>
-      <td>${c.phone || 'N/A'}</td>
-      <td>${c.location || c.address || 'Cheranmahadevi'}</td>
-    </tr>
-  `).join('');
+  tableBody.innerHTML = customers.map((c, i) => {
+    const isOnline = (c.lastActive || '').toLowerCase().includes('online') || (c.lastActive || '').toLowerCase().includes('logged');
+    return `
+      <tr>
+        <td class="fw-bold text-muted">${i + 1}</td>
+        <td>
+          <div class="fw-bold text-emerald-800 fs-6">${c.name || 'Valued Farmer'}</div>
+          ${isOnline ? '<span class="badge bg-success-subtle text-success border border-success rounded-pill px-2 py-0" style="font-size:0.7rem;"><i class="fa-solid fa-circle text-success me-1" style="font-size:0.5rem;"></i> Logged In / Online</span>' : ''}
+        </td>
+        <td><small class="text-dark fw-semibold">${c.email || 'N/A'}</small></td>
+        <td><small class="text-muted"><i class="fa-solid fa-phone me-1 text-success"></i><a href="tel:${c.phone}" class="text-decoration-none text-dark fw-bold">${c.phone || 'N/A'}</a></small></td>
+        <td><span class="badge bg-light text-dark border">${c.location || 'Cheranmahadevi'}</span></td>
+      </tr>
+    `;
+  }).join('');
 }
 
 /* ==========================================================================
