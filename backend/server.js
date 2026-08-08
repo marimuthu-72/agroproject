@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const os = require('os');
 const { initDB } = require('./config/db');
 
 dotenv.config();
@@ -38,8 +39,28 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Server Error', error: err.message });
 });
 
-const PORT = process.env.PORT || 5000;
+// Helper function to get local IPv4 network address
+function getLocalNetworkIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name in interfaces) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
+  const localIP = getLocalNetworkIP();
+  console.log('\n================================================================');
+  console.log('  🌱 G. Saravana Agro Clinic E-Commerce & Admin ERP Server');
+  console.log('================================================================');
+  console.log(`  ► Local Laptop URL:      http://localhost:${PORT}`);
+  console.log(`  ► Mobile / Wi-Fi Network: http://${localIP}:${PORT}`);
+  console.log('================================================================\n');
 });
