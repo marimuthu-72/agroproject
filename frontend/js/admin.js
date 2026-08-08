@@ -111,12 +111,119 @@ function clearAllOrders() {
   }
 }
 
+let lastUnreadMsgCount = -1;
+
+function playNotificationChime() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.4);
+  } catch(e) {}
+}
+
+async function initAdminLiveNotifications() {
+  injectHeaderNotificationBell();
+  pollAdminUserMessages();
+  setInterval(pollAdminUserMessages, 4000);
+}
+
+function injectHeaderNotificationBell() {
+  const header = document.querySelector('.admin-header');
+  if (!header || document.getElementById('admin-notif-bell-container')) return;
+
+  const bellDiv = document.createElement('div');
+  bellDiv.id = 'admin-notif-bell-container';
+  bellDiv.className = 'ms-auto me-3 position-relative';
+  bellDiv.innerHTML = `
+    <a href="inquiries.html" class="btn btn-light position-relative rounded-circle p-2 border shadow-sm" title="View Customer Messages">
+      <i class="fa-solid fa-bell fs-5 text-emerald-800"></i>
+      <span id="header-notif-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none; font-size:0.75rem;">0</span>
+    </a>
+  `;
+
+  const rightArea = header.querySelector('div:last-child');
+  if (rightArea && rightArea !== header.firstElementChild) {
+    rightArea.parentNode.insertBefore(bellDiv, rightArea);
+  } else {
+    header.appendChild(bellDiv);
+  }
+}
+
+async function pollAdminUserMessages() {
+  let inquiries = [];
+  try {
+    const res = await fetch('/api/inquiries');
+    if (res.ok) inquiries = await res.json();
+  } catch(e) {}
+
+  if (!inquiries || inquiries.length === 0) {
+    try {
+      inquiries = JSON.parse(localStorage.getItem('agri_inquiries') || '[]');
+    } catch(e) { inquiries = []; }
+  }
+
+  const unreadItems = inquiries.filter(i => (i.status || 'New') === 'New');
+  const unreadCount = unreadItems.length;
+
+  // Update Sidebar Badges across all pages
+  const sidebarLinks = document.querySelectorAll('a[href="inquiries.html"]');
+  sidebarLinks.forEach(link => {
+    let badge = link.querySelector('.admin-msg-badge, .badge');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'admin-msg-badge badge bg-danger ms-auto rounded-pill px-2 py-1';
+      badge.style.fontSize = '0.75rem';
+      link.appendChild(badge);
+    }
+    if (unreadCount > 0) {
+      badge.textContent = unreadCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  });
+
+  // Update Header Bell Badge
+  const headerBadge = document.getElementById('header-notif-badge');
+  if (headerBadge) {
+    if (unreadCount > 0) {
+      headerBadge.textContent = unreadCount;
+      headerBadge.style.display = 'inline-block';
+    } else {
+      headerBadge.style.display = 'none';
+    }
+  }
+
+  // Trigger Notification Toast and Chime sound if new message arrived
+  if (lastUnreadMsgCount !== -1 && unreadCount > lastUnreadMsgCount) {
+    const latest = unreadItems[0] || inquiries[0];
+    const farmerName = latest ? (latest.name || 'Farmer') : 'Customer';
+    playNotificationChime();
+
+    if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+      agriApp.showToast(`🔔 New User Message from ${farmerName}! Click 'User Messages' to view.`, 'warning');
+    }
+  }
+
+  lastUnreadMsgCount = unreadCount;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderAdminDashboard();
   renderAdminProducts();
   renderAdminOrders();
   renderAdminCustomers();
   renderAdminOffers();
+  initAdminLiveNotifications();
 });
 
 async function renderAdminDashboard() {
