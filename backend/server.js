@@ -24,6 +24,7 @@ app.use('/api/offers', require('./routes/offers'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/inquiries', require('./routes/inquiries'));
+app.use('/api/loans', require('./routes/loans'));
 
 // Serve Frontend Static Files
 app.use(express.static(path.join(__dirname, '../frontend')));

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agri Loans & Subsidy Desk | ERP Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+  <style>
+    .live-pulse {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+      animation: pulse-green 1.8s infinite;
+    }
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <div class="admin-brand-icon"><img src="../logo.png" alt="G. Saravana Agro Clinic Logo"></div>
+        <div>
+          <div class="fw-bold font-heading">Saravana ERP</div>
+          <div class="small text-slate-400" style="font-size:0.7rem;">Cheranmahadevi</div>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="admin-nav-item"><i class="fa-solid fa-chart-pie fs-5"></i> <span>Dashboard</span></a>
+        <a href="products.html" class="admin-nav-item"><i class="fa-solid fa-boxes-stacked fs-5"></i> <span>Product Management</span></a>
+        <a href="inventory.html" class="admin-nav-item"><i class="fa-solid fa-warehouse fs-5"></i> <span>Stock Inventory</span></a>
+        <a href="orders.html" class="admin-nav-item"><i class="fa-solid fa-truck-ramp-box fs-5"></i> <span>Live Orders</span></a>
+        <a href="loans.html" class="admin-nav-item active"><i class="fa-solid fa-hand-holding-dollar fs-5"></i> <span>Agri Loans</span> <span id="sidebar-loan-badge" class="badge bg-warning text-dark ms-auto rounded-pill" style="display:none;">0</span></a>
+        <a href="inquiries.html" class="admin-nav-item"><i class="fa-solid fa-comments fs-5"></i> <span>User Messages</span></a>
+        <a href="customers.html" class="admin-nav-item"><i class="fa-solid fa-users fs-5"></i> <span>Farmer Directory</span></a>
+        <a href="offers.html" class="admin-nav-item"><i class="fa-solid fa-tags fs-5"></i> <span>Coupons & Offers</span></a>
+        <a href="transactions.html" class="admin-nav-item"><i class="fa-solid fa-receipt fs-5"></i> <span>Revenue & Payments</span></a>
+        <a href="settings.html" class="admin-nav-item"><i class="fa-solid fa-user-lock fs-5"></i> <span>Account Security</span></a>
+        
+        <div class="mt-auto pt-3 border-top border-secondary">
+          <a href="../index.html" class="admin-nav-item"><i class="fa-solid fa-store fs-5"></i> <span>View Main E-Store</span></a>
+          <button onclick="adminLogout()" class="admin-nav-item border-0 bg-transparent text-danger w-100 text-start"><i class="fa-solid fa-right-from-bracket fs-5"></i> <span>Log Out</span></button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-page-title"><i class="fa-solid fa-hand-holding-dollar text-success me-2"></i>Farmer Agri Loan & Subsidy Applications Desk</h1>
+          <div class="small text-muted d-flex align-items-center gap-2 mt-1">
+            <span class="live-pulse"></span>
+            <span>Real-Time Live Sync Active (Auto-poll every 4s)</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-success font-heading fw-bold" onclick="simulateTestLoan()"><i class="fa-solid fa-plus me-1"></i> Simulate Test Loan Application</button>
+          <button class="btn btn-sm btn-success font-heading fw-bold" onclick="renderAdminLoans()"><i class="fa-solid fa-rotate me-1"></i> Refresh</button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="card p-3 border shadow-sm rounded-3">
+              <div class="text-muted small fw-bold">TOTAL LOAN REQUESTS</div>
+              <div id="stat-total-loans" class="fs-2 font-heading fw-bold text-emerald-800">0</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3 border shadow-sm rounded-3 bg-warning-subtle">
+              <div class="text-dark small fw-bold">PENDING APPROVAL</div>
+              <div id="stat-pending-loans" class="fs-2 font-heading fw-bold text-warning-emphasis">0</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3 border shadow-sm rounded-3 bg-success-subtle">
+              <div class="text-dark small fw-bold">APPROVED LOANS</div>
+              <div id="stat-approved-loans" class="fs-2 font-heading fw-bold text-success">0</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card p-3 border shadow-sm rounded-3 bg-light">
+              <div class="text-muted small fw-bold">TOTAL AMOUNT REQUESTED</div>
+              <div id="stat-amount-loans" class="fs-2 font-heading fw-bold text-dark">₹0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card p-3 mb-4 bg-white border rounded-3 shadow-sm">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-6">
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="text" id="loan-search-input" class="form-control border-start-0" placeholder="Search Farmer Name, Mobile, Aadhaar, or Location..." oninput="filterLoans()">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <select id="loan-status-filter" class="form-select fw-semibold" onchange="filterLoans()">
+                <option value="ALL">All Application Statuses</option>
+                <option value="Pending">Pending Review</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loans Table -->
+        <div class="admin-table-container shadow-sm">
+          <table class="admin-table align-middle">
+            <thead>
+              <tr>
+                <th>App ID & Date</th>
+                <th>Farmer Name & Contact</th>
+                <th>Loan Category & Acreage</th>
+                <th>Requested Amount</th>
+                <th>Bank & IFSC Details</th>
+                <th>Status</th>
+                <th>Admin Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-loans-table">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    let allLoans = [];
+
+    async function renderAdminLoans() {
+      const tableBody = document.getElementById('admin-loans-table');
+      if (!tableBody) return;
+
+      try {
+        const res = await fetch('/api/loans');
+        if (res.ok) {
+          allLoans = await res.json();
+        }
+      } catch (e) {}
+
+      if (!allLoans || allLoans.length === 0) {
+        try {
+          allLoans = JSON.parse(localStorage.getItem('agri_loans') || '[]');
+        } catch(e) { allLoans = []; }
+      }
+
+      if (allLoans.length === 0) {
+        allLoans = [
+          { id: 'LN-1001', name: 'Senthil Kumar M.', phone: '9842111223', aadhaar: '541234567890', loanType: 'Crop & Fertilizer Micro-Loan', amount: 45000, landSize: '3.5 Acres', location: 'Cheranmahadevi', bankAccount: '38921019281', ifsc: 'SBIN0001824', status: 'Pending', createdAt: new Date().toISOString() },
+          { id: 'LN-1002', name: 'Muthuraman P.', phone: '9443122334', aadhaar: '987654321012', loanType: 'Tractor & Machinery Loan', amount: 150000, landSize: '5.0 Acres', location: 'Ambasamudram', bankAccount: '91827364512', ifsc: 'IOBA0000412', status: 'Approved', createdAt: new Date(Date.now() - 86400000).toISOString() }
+        ];
+        try {
+          localStorage.setItem('agri_loans', JSON.stringify(allLoans));
+        } catch(e) {}
+      }
+
+      updateLoanStats(allLoans);
+      filterLoans();
+    }
+
+    function updateLoanStats(items) {
+      const total = items.length;
+      const pendingCount = items.filter(l => (l.status || 'Pending') === 'Pending').length;
+      const approvedCount = items.filter(l => l.status === 'Approved').length;
+      const sumAmount = items.reduce((sum, l) => sum + Number(l.amount || 0), 0);
+
+      document.getElementById('stat-total-loans').textContent = total;
+      document.getElementById('stat-pending-loans').textContent = pendingCount;
+      document.getElementById('stat-approved-loans').textContent = approvedCount;
+      document.getElementById('stat-amount-loans').textContent = `₹${sumAmount.toLocaleString('en-IN')}`;
+
+      const sidebarBadge = document.getElementById('sidebar-loan-badge');
+      if (sidebarBadge) {
+        if (pendingCount > 0) {
+          sidebarBadge.textContent = pendingCount;
+          sidebarBadge.style.display = 'inline-block';
+        } else {
+          sidebarBadge.style.display = 'none';
+        }
+      }
+    }
+
+    function renderLoansTableRows(items) {
+      const tableBody = document.getElementById('admin-loans-table');
+      if (!tableBody) return;
+
+      if (items.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-muted"><i class="fa-solid fa-folder-open fs-2 mb-2 d-block"></i> No loan applications found. Click "+ Simulate Test Loan Application" to test.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = items.map(l => {
+        const dateStr = l.createdAt ? new Date(l.createdAt).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : 'Today';
+        const isPending = (l.status || 'Pending') === 'Pending';
+        const badgeClass = l.status === 'Approved' ? 'bg-success' : (l.status === 'Rejected' ? 'bg-danger' : (l.status === 'Under Review' ? 'bg-info text-dark' : 'bg-warning text-dark'));
+        const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
+
+        return `
+          <tr class="${isPending ? 'table-warning-subtle' : ''}">
+            <td>
+              <div class="fw-bold text-success">${l.id}</div>
+              <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>${dateStr}</small>
+            </td>
+            <td>
+              <div class="fw-bold text-emerald-800 fs-6">${l.name}</div>
+              <small class="text-muted"><i class="fa-solid fa-phone me-1 text-success"></i><a href="tel:${cleanPhone}" class="text-decoration-none text-dark fw-bold">${l.phone}</a></small>
+              ${l.aadhaar ? `<br><small class="text-muted"><i class="fa-solid fa-id-card me-1"></i>Aadhaar: ${l.aadhaar}</small>` : ''}
+            </td>
+            <td>
+              <span class="badge bg-light text-emerald-800 border border-success fw-bold px-2 py-1 mb-1 d-inline-block">${l.loanType}</span>
+              <br><small class="text-muted"><i class="fa-solid fa-wheat-awn me-1"></i>Land: <strong>${l.landSize}</strong> (${l.location || 'Cheranmahadevi'})</small>
+            </td>
+            <td>
+              <div class="fw-bold text-success fs-5">₹${Number(l.amount || 0).toLocaleString('en-IN')}</div>
+            </td>
+            <td>
+              ${l.bankAccount ? `
+                <div class="small fw-bold">A/C: ${l.bankAccount}</div>
+                <small class="text-muted">IFSC: ${l.ifsc || 'N/A'}</small>
+              ` : '<small class="text-muted">Direct Cash / Voucher</small>'}
+            </td>
+            <td>
+              <span class="badge ${badgeClass} px-3 py-2 rounded-pill fs-7">${l.status || 'Pending'}</span>
+            </td>
+            <td>
+              <div class="d-flex flex-wrap align-items-center gap-1">
+                <select class="form-select form-select-sm fw-bold border-success" style="width:130px;" onchange="updateLoanStatus('${l.id}', this.value)">
+                  <option value="Pending" ${l.status==='Pending'?'selected':''}>Pending</option>
+                  <option value="Under Review" ${l.status==='Under Review'?'selected':''}>Under Review</option>
+                  <option value="Approved" ${l.status==='Approved'?'selected':''}>Approved</option>
+                  <option value="Rejected" ${l.status==='Rejected'?'selected':''}>Rejected</option>
+                </select>
+
+                <button class="btn btn-sm btn-success fw-bold" onclick="sendLoanWhatsApp('${l.id}')" title="Send WhatsApp Update">
+                  <i class="fa-brands fa-whatsapp me-1"></i> WhatsApp
+                </button>
+                <a href="tel:${cleanPhone}" class="btn btn-sm btn-outline-primary" title="Call Applicant">
+                  <i class="fa-solid fa-phone"></i>
+                </a>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteLoan('${l.id}')" title="Delete Application">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function updateLoanStatus(loanId, newStatus) {
+      try {
+        await fetch(`/api/loans/${loanId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+      } catch (e) {}
+
+      const idx = allLoans.findIndex(l => l.id == loanId);
+      if (idx > -1) {
+        allLoans[idx].status = newStatus;
+        try {
+          localStorage.setItem('agri_loans', JSON.stringify(allLoans));
+        } catch(e) {}
+      }
+
+      if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+        agriApp.showToast(`Loan Application #${loanId} status updated to ${newStatus}`, 'success');
+      }
+      updateLoanStats(allLoans);
+      filterLoans();
+    }
+
+    async function deleteLoan(loanId) {
+      if (!confirm('Are you sure you want to delete this loan application?')) return;
+      allLoans = allLoans.filter(l => l.id != loanId);
+      try {
+        localStorage.setItem('agri_loans', JSON.stringify(allLoans));
+      } catch(e) {}
+      updateLoanStats(allLoans);
+      filterLoans();
+    }
+
+    function sendLoanWhatsApp(loanId) {
+      const l = allLoans.find(item => item.id == loanId);
+      if (!l) return;
+
+      const cleanPhone = (l.phone || '').replace(/[^0-9]/g, '');
+      const formattedPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+      const msg = `Hello ${l.name}, your Agri Loan Application #${l.id} for ₹${Number(l.amount).toLocaleString('en-IN')} (${l.loanType}) status is currently: *${l.status || 'Under Review'}*. G. Saravana Agro Clinic, Cheranmahadevi.`;
+
+      window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function filterLoans() {
+      const search = (document.getElementById('loan-search-input')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('loan-status-filter')?.value || 'ALL';
+
+      let filtered = [...allLoans];
+      if (search) {
+        filtered = filtered.filter(l => 
+          (l.name && l.name.toLowerCase().includes(search)) ||
+          (l.phone && l.phone.includes(search)) ||
+          (l.aadhaar && l.aadhaar.includes(search)) ||
+          (l.location && l.location.toLowerCase().includes(search)) ||
+          (l.loanType && l.loanType.toLowerCase().includes(search))
+        );
+      }
+      if (statusFilter !== 'ALL') {
+        filtered = filtered.filter(l => (l.status || 'Pending') === statusFilter);
+      }
+      renderLoansTableRows(filtered);
+    }
+
+    function simulateTestLoan() {
+      const sampleNames = ['Velusamy Farmer', 'Ponnusamy R.', 'Shanmugam Agri'];
+      const sampleTypes = ['Crop & Fertilizer Micro-Loan', 'Tractor & Machinery Loan', 'Drip Irrigation Subsidy'];
+
+      const randName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+      const randType = sampleTypes[Math.floor(Math.random() * sampleTypes.length)];
+      const randPhone = '98' + Math.floor(10000000 + Math.random() * 90000000);
+      const randAmount = (Math.floor(Math.random() * 8) + 2) * 10000;
+
+      const newLoan = {
+        id: 'LN-' + Math.floor(10000 + Math.random() * 90000),
+        name: randName,
+        phone: randPhone,
+        aadhaar: '7890' + Math.floor(10000007 + Math.random() * 90000000),
+        loanType: randType,
+        amount: randAmount,
+        landSize: '4.0 Acres',
+        location: 'Cheranmahadevi',
+        bankAccount: '91827364501',
+        ifsc: 'SBIN0001824',
+        status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+
+      allLoans.unshift(newLoan);
+      try {
+        localStorage.setItem('agri_loans', JSON.stringify(allLoans));
+      } catch(e) {}
+
+      if (typeof agriApp !== 'undefined' && agriApp.showToast) {
+        agriApp.showToast(`New Loan Application submitted by ${randName} for ₹${randAmount.toLocaleString('en-IN')}!`, 'warning');
+      }
+
+      updateLoanStats(allLoans);
+      filterLoans();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAdminLoans();
+      setInterval(renderAdminLoans, 4000);
+    });
+  </script>
+</body>
+</html>

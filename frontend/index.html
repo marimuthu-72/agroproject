@@ -287,10 +287,79 @@
     </div>
   </div>
 
-  <!-- Floating Ask Agronomist / Message Admin Button -->
+  <!-- Floating Apply for Agri Loan Button -->
+  <button type="button" class="btn btn-warning text-dark rounded-pill position-fixed shadow-lg d-flex align-items-center gap-2 px-3 py-2 fw-bold font-heading" style="bottom: 95px; right: 25px; z-index: 1050;" data-bs-toggle="modal" data-bs-target="#userLoanModal" title="Apply for Agri Loan & Govt Subsidy">
+    <i class="fa-solid fa-hand-holding-dollar fs-4"></i>
+    <span>Apply Agri Loan</span>
+  </button>
+
+  <!-- Quick User Message Button -->
   <button type="button" class="btn btn-emerald rounded-circle position-fixed shadow-lg d-flex align-items-center justify-content-center" style="bottom: 25px; right: 25px; width: 60px; height: 60px; z-index: 1050;" data-bs-toggle="modal" data-bs-target="#userMessageModal" title="Message Admin / Agronomist Support">
     <i class="fa-solid fa-headset fs-3"></i>
   </button>
+
+  <!-- Agri Loan Application Modal -->
+  <div class="modal fade" id="userLoanModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-emerald text-white">
+          <h5 class="modal-title font-heading fw-bold"><i class="fa-solid fa-hand-holding-dollar me-2 text-warning"></i>Apply for Agriculture Loan & Govt Subsidy</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form onsubmit="handleUserLoanSubmit(event)">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Farmer Full Name *</label>
+                <input type="text" id="loan-user-name" class="form-control form-control-agri" required placeholder="e.g. Ramanathan K.">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Mobile Phone Number *</label>
+                <input type="tel" id="loan-user-phone" class="form-control form-control-agri phone-input" required placeholder="10 Digit Mobile Number" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Loan Category *</label>
+                <select id="loan-user-type" class="form-select form-control-agri">
+                  <option value="Crop & Fertilizer Micro-Loan">Crop & Fertilizer Micro-Loan (Up to ₹50,000)</option>
+                  <option value="Tractor & Machinery Loan">Tractor & Machinery Loan (Up to ₹2,00,000)</option>
+                  <option value="Drip Irrigation Subsidy">Drip Irrigation & Solar Pump Subsidy (Up to ₹1,50,000)</option>
+                  <option value="Seeds & Soil Credit">Seeds & Soil Testing Credit (Up to ₹25,000)</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Required Loan Amount (₹) *</label>
+                <input type="number" id="loan-user-amount" class="form-control form-control-agri" required placeholder="e.g. 50000" min="1000">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Farm Size / Land Acreage</label>
+                <input type="text" id="loan-user-land" class="form-control form-control-agri" placeholder="e.g. 3.5 Acres">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">District / Location</label>
+                <input type="text" id="loan-user-location" class="form-control form-control-agri" placeholder="e.g. Cheranmahadevi, Tirunelveli">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Aadhaar Card Number</label>
+                <input type="text" id="loan-user-aadhaar" class="form-control form-control-agri" maxlength="12" placeholder="12 Digit Aadhaar Number">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Bank Account No & IFSC (Optional)</label>
+                <input type="text" id="loan-user-bank" class="form-control form-control-agri" placeholder="e.g. A/C 38921019281 (SBIN0001824)">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Loan Purpose / Crop Details</label>
+                <textarea id="loan-user-purpose" class="form-control form-control-agri" rows="2" placeholder="Mention crop type (Paddy/Cotton/Banana) and fertilizer requirements..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold w-100 py-3 font-heading fw-bold mt-4">
+              <i class="fa-solid fa-paper-plane me-2"></i> Submit Agri Loan Application
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Quick User Message Modal -->
   <div class="modal fade" id="userMessageModal" tabindex="-1">
@@ -381,6 +450,57 @@
       e.target.reset();
 
       const modalEl = document.getElementById('userMessageModal');
+      const instance = bootstrap.Modal.getInstance(modalEl);
+      if (instance) instance.hide();
+    }
+
+    async function handleUserLoanSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('loan-user-name').value.trim();
+      const phone = document.getElementById('loan-user-phone').value.trim();
+      const loanType = document.getElementById('loan-user-type').value;
+      const amount = Number(document.getElementById('loan-user-amount').value || 0);
+      const landSize = document.getElementById('loan-user-land').value.trim() || '2.0 Acres';
+      const location = document.getElementById('loan-user-location').value.trim() || 'Cheranmahadevi';
+      const aadhaar = document.getElementById('loan-user-aadhaar').value.trim();
+      const bank = document.getElementById('loan-user-bank').value.trim();
+      const purpose = document.getElementById('loan-user-purpose').value.trim();
+
+      if (!name || !phone || !amount) return;
+
+      const loanObj = {
+        id: 'LN-' + Math.floor(10000 + Math.random() * 90000),
+        name,
+        phone,
+        aadhaar,
+        loanType,
+        amount,
+        landSize,
+        location,
+        bankAccount: bank,
+        purpose,
+        status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        let existing = JSON.parse(localStorage.getItem('agri_loans') || '[]');
+        existing.unshift(loanObj);
+        localStorage.setItem('agri_loans', JSON.stringify(existing));
+      } catch(err) {}
+
+      try {
+        await fetch('/api/loans', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, aadhaar, loanType, amount, landSize, location, bankAccount: bank, purpose })
+        });
+      } catch(err) {}
+
+      agriApp.showToast(`Agri Loan Application submitted successfully! Ref: ${loanObj.id}`, 'success');
+      e.target.reset();
+
+      const modalEl = document.getElementById('userLoanModal');
       const instance = bootstrap.Modal.getInstance(modalEl);
       if (instance) instance.hide();
     }
